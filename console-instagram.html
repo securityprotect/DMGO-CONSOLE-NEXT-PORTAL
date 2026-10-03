@@ -4,6 +4,7 @@
 		<meta charset="utf-8" />
 		<title>DMGO Console — Instagram</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
 		<link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
@@ -11,12 +12,9 @@
 		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/responsive.bootstrap4.min.css" />
 		<link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
 		<style>
-			.sidebar-category{display:block;padding:16px 18px 6px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#9aa3b2;font-weight:700;}
-			.menu-block{padding-bottom:90px;}
-			.sidebar-profile{position:absolute;bottom:0;left:0;right:0;padding:12px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
-			.sidebar-profile .sp-avatar{width:38px;height:38px;border-radius:50%;background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
-			.sidebar-profile .sp-name{color:#fff;font-size:13px;font-weight:600;line-height:1.15;}
-			.sidebar-profile .sp-email{color:rgba(255,255,255,.6);font-size:11px;}
+
+
+
 		</style>
 	</head>
 	<body>
@@ -32,21 +30,16 @@
 		<div class="left-side-bar">
 			<div class="brand-logo"><a href="console.html"><span class="dark-logo" style="font-weight:800;color:#1b2a4e;font-size:22px;letter-spacing:.5px;">DMGO</span><span class="light-logo" style="font-weight:800;color:#fff;font-size:22px;letter-spacing:.5px;">DMGO</span></a><div class="close-sidebar" data-toggle="left-sidebar-close"><i class="ion-close-round"></i></div></div>
 			<div class="menu-block customscroll"><div class="sidebar-menu"><ul id="accordion-menu">
-				<li class="sidebar-category">Overview</li>
 				<li data-page="console.html"><a href="console.html"><span class="micon bi bi-grid-1x2-fill"></span><span class="mtext">Dashboard</span></a></li>
-				<li class="sidebar-category">Manage</li>
 				<li data-page="console-users.html"><a href="console-users.html"><span class="micon bi bi-people-fill"></span><span class="mtext">Users</span></a></li>
 				<li data-page="console-plans.html"><a href="console-plans.html"><span class="micon bi bi-receipt"></span><span class="mtext">Plans &amp; Billing</span></a></li>
 				<li data-page="console-tickets.html"><a href="console-tickets.html"><span class="micon bi bi-ticket-detailed"></span><span class="mtext">Tickets</span></a></li>
-				<li class="sidebar-category">Platforms</li>
 				<li data-page="console-automations.html"><a href="console-automations.html"><span class="micon bi bi-gear-fill"></span><span class="mtext">Automations</span></a></li>
 				<li data-page="console-instagram.html"><a href="console-instagram.html"><span class="micon bi bi-instagram"></span><span class="mtext">Instagram</span></a></li>
 				<li data-page="console-whatsapp.html"><a href="console-whatsapp.html"><span class="micon bi bi-whatsapp"></span><span class="mtext">WhatsApp</span></a></li>
-				<li class="sidebar-category">System</li>
 				<li data-page="console-diagnostics.html"><a href="console-diagnostics.html"><span class="micon bi bi-shield-check"></span><span class="mtext">Diagnostics</span></a></li>
 				<li data-page="console-settings.html"><a href="console-settings.html"><span class="micon bi bi-sliders"></span><span class="mtext">Settings</span></a></li>
 			</ul></div></div>
-			<div class="sidebar-profile"><div class="sp-avatar" id="sp-avatar">A</div><div style="min-width:0;"><div class="sp-name" id="sp-name">Admin</div><div class="sp-email" id="sp-email"></div></div></div>
 		</div>
 		<div class="mobile-menu-overlay"></div>
 		<div class="main-container"><div class="xs-pd-20-10 pd-ltr-20">
