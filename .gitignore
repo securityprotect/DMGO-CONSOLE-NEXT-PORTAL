@@ -1,4 +1,6 @@
-/bower_components/
-/node_modules/
-.sass-cache/
-.npmignore
+node_modules/
+.next/
+.env
+.env.local
+.env.*.local
+!.env.example

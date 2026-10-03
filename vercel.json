@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://api.dmgo.in/api/$1"
+    },
+    {
+      "source": "/",
+      "destination": "/login.html"
+    }
+  ]
+}

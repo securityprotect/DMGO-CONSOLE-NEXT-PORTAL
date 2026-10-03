@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>DMGO Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+  <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+  <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="menu-icon bi bi-list"></div>
+      <div class="brand-logo" style="font-weight:800;color:#fff;padding-left:6px;">DMGO Console</div>
+    </div>
+    <div class="header-right">
+      <div class="user-info-dropdown">
+        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+          <span class="user-icon bi bi-person-circle"></span>
+          <span class="user-name" id="admin-name">Admin</span>
+          <span class="caret-down bi bi-caret-down-fill"></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <div class="dropdown-item-text" id="admin-email" style="font-size:12px;color:#888;"></div>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="left-side-bar">
+    <div class="sidebar-menu">
+      <ul id="menu-list">
+        <li class="active"><a href="console.html"><i class="bi bi-grid"></i><span class="menu-text">Dashboard</span></a></li>
+        <li><a href="#"><i class="bi bi-people"></i><span class="menu-text">Users</span></a></li>
+        <li><a href="#"><i class="bi bi-receipt"></i><span class="menu-text">Plans &amp; Billing</span></a></li>
+        <li><a href="#"><i class="bi bi-ticket"></i><span class="menu-text">Tickets</span></a></li>
+        <li><a href="#"><i class="bi bi-gear"></i><span class="menu-text">Automations</span></a></li>
+        <li><a href="#"><i class="bi bi-instagram"></i><span class="menu-text">Instagram</span></a></li>
+        <li><a href="#"><i class="bi bi-whatsapp"></i><span class="menu-text">WhatsApp</span></a></li>
+        <li><a href="#"><i class="bi bi-shield-check"></i><span class="menu-text">Diagnostics</span></a></li>
+        <li><a href="#"><i class="bi bi-sliders"></i><span class="menu-text">Settings</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="mobile-menu-overlay"></div>
+
+  <div class="main-container">
+    <div class="pd-20 height-100-p">
+      <div id="preview-banner" class="alert alert-warning" style="display:none;">
+        <strong>Preview mode</strong> — no live backend session. Add <code>?preview=1</code> is on.
+        Build your pages; test real auth on the VPS at console.dmgo.in.
+      </div>
+
+      <div class="page-header">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="h4">Dashboard</h4>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Console</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
+          <div class="card-box height-100-p pd-20">
+            <h5 class="text-blue">Signed in as</h5>
+            <p id="who" class="font-20 weight-600 mb-0">—</p>
+            <p id="who-email" class="text-muted" style="font-size:13px;">—</p>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
+          <div class="card-box height-100-p pd-20">
+            <h5 class="text-blue">Capabilities</h5>
+            <p id="caps" class="font-20 weight-600 mb-0">—</p>
+            <p class="text-muted" style="font-size:13px;">admin permissions loaded</p>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
+          <div class="card-box height-100-p pd-20">
+            <h5 class="text-blue">API status</h5>
+            <p id="api-status" class="font-20 weight-600 mb-0 text-success">connected</p>
+            <p class="text-muted" style="font-size:13px;" id="api-base">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-box pd-20 mb-20">
+        <h5 class="mb-20">Where to build from here</h5>
+        <p>The backend already exposes every console API under <code>/api/admin/*</code>
+          (users, plans, billing, tickets, automations, instagram, whatsapp, diagnostics, settings…).
+          Each sidebar item above is a placeholder — drop a page next to <code>console.html</code>,
+          call <code>DMGO_API.get('/api/admin/&lt;resource&gt;')</code> and render. Auth + the API client
+          are already wired (cookie-based, same-origin). See <code>CONSOLE-SETUP.md</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    (function () {
+      var banner = document.getElementById('preview-banner');
+      if (window.DMGO_AUTH.isPreview()) banner.style.display = 'block';
+
+      document.getElementById('api-base').textContent = 'API_BASE: ' + window.DMGO_API.API_BASE;
+
+      window.DMGO_AUTH.requireSession().then(function (s) {
+        var u = (s && s.user) || {};
+        document.getElementById('admin-name').textContent = u.name || 'Admin';
+        document.getElementById('admin-email').textContent = u.email || '';
+        document.getElementById('who').textContent = u.name || '—';
+        document.getElementById('who-email').textContent = u.email || '';
+        var caps = (s && s.capabilities) || [];
+        document.getElementById('caps').textContent = caps.length ? String(caps.length) : (s.preview ? 'preview' : '0');
+        document.getElementById('api-status').textContent = 'connected';
+        document.getElementById('api-status').className = 'font-20 weight-600 mb-0 text-success';
+      }).catch(function (e) {
+        document.getElementById('api-status').textContent = 'not authenticated';
+        document.getElementById('api-status').className = 'font-20 weight-600 mb-0 text-danger';
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.DMGO_AUTH.logout();
+      });
+    })();
+  </script>
+</body>
+</html>
