@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>DMGO Console — Plans & Billing</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/dataTables.bootstrap4.min.css" />
+		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/responsive.bootstrap4.min.css" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+		<style>
+			.sidebar-category{display:block;padding:16px 18px 6px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#9aa3b2;font-weight:700;}
+			.menu-block{padding-bottom:90px;}
+			.sidebar-profile{position:absolute;bottom:0;left:0;right:0;padding:12px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+			.sidebar-profile .sp-avatar{width:38px;height:38px;border-radius:50%;background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+			.sidebar-profile .sp-name{color:#fff;font-size:13px;font-weight:600;line-height:1.15;}
+			.sidebar-profile .sp-email{color:rgba(255,255,255,.6);font-size:11px;}
+		</style>
+	</head>
+	<body>
+		<div class="pre-loader"><div class="pre-loader-box"><div class="loader-logo"><span style="font-weight:800;color:#265ed7;font-size:22px;">DMGO</span></div><div class="loader-progress" id="progress_div"><div class="bar" id="bar1"></div></div><div class="percent" id="percent1">0%</div><div class="loading-text">Loading…</div></div></div>
+		<div class="header">
+			<div class="header-left"><div class="menu-icon bi bi-list"></div><div class="brand-logo" style="font-weight:800;color:#fff;font-size:18px;padding-left:6px;line-height:1;">DMGO Console</div></div>
+			<div class="header-right">
+				<div class="dashboard-setting user-notification"><div class="dropdown"><a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar"><i class="dw dw-settings2"></i></a></div></div>
+				<div class="user-notification"><div class="dropdown"><a class="dropdown-toggle no-arrow" href="javascript:;" role="button" data-toggle="dropdown"><i class="icon-copy dw dw-notification"></i><span class="badge notification-active"></span></a><div class="dropdown-menu dropdown-menu-right"><div class="notification-list mx-h-350 customscroll"><ul id="notif-list"><li><a href="#"><h3>System</h3><p>Live DMGO console.</p></a></li></ul></div></div></div></div>
+				<div class="user-info-dropdown"><div class="dropdown"><a class="dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown"><span class="user-icon"><img src="vendors/images/photo1.jpg" alt="" /></span><span class="user-name" id="admin-name">Admin</span></a><div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list"><div class="dropdown-item-text px-3 py-2" id="admin-email" style="font-size:12px;color:#888;"></div><div class="dropdown-divider"></div><a class="dropdown-item" href="console.html"><i class="dw dw-user1"></i> Console</a><a class="dropdown-item" href="#" id="logout-btn"><i class="dw dw-logout"></i> Log Out</a></div></div></div>
+			</div>
+		</div>
+		<div class="left-side-bar">
+			<div class="brand-logo"><a href="console.html"><span class="dark-logo" style="font-weight:800;color:#1b2a4e;font-size:22px;letter-spacing:.5px;">DMGO</span><span class="light-logo" style="font-weight:800;color:#fff;font-size:22px;letter-spacing:.5px;">DMGO</span></a><div class="close-sidebar" data-toggle="left-sidebar-close"><i class="ion-close-round"></i></div></div>
+			<div class="menu-block customscroll"><div class="sidebar-menu"><ul id="accordion-menu">
+				<li class="sidebar-category">Overview</li>
+				<li data-page="console.html"><a href="console.html"><span class="micon bi bi-grid-1x2-fill"></span><span class="mtext">Dashboard</span></a></li>
+				<li class="sidebar-category">Manage</li>
+				<li data-page="console-users.html"><a href="console-users.html"><span class="micon bi bi-people-fill"></span><span class="mtext">Users</span></a></li>
+				<li data-page="console-plans.html"><a href="console-plans.html"><span class="micon bi bi-receipt"></span><span class="mtext">Plans &amp; Billing</span></a></li>
+				<li data-page="console-tickets.html"><a href="console-tickets.html"><span class="micon bi bi-ticket-detailed"></span><span class="mtext">Tickets</span></a></li>
+				<li class="sidebar-category">Platforms</li>
+				<li data-page="console-automations.html"><a href="console-automations.html"><span class="micon bi bi-gear-fill"></span><span class="mtext">Automations</span></a></li>
+				<li data-page="console-instagram.html"><a href="console-instagram.html"><span class="micon bi bi-instagram"></span><span class="mtext">Instagram</span></a></li>
+				<li data-page="console-whatsapp.html"><a href="console-whatsapp.html"><span class="micon bi bi-whatsapp"></span><span class="mtext">WhatsApp</span></a></li>
+				<li class="sidebar-category">System</li>
+				<li data-page="console-diagnostics.html"><a href="console-diagnostics.html"><span class="micon bi bi-shield-check"></span><span class="mtext">Diagnostics</span></a></li>
+				<li data-page="console-settings.html"><a href="console-settings.html"><span class="micon bi bi-sliders"></span><span class="mtext">Settings</span></a></li>
+			</ul></div></div>
+			<div class="sidebar-profile"><div class="sp-avatar" id="sp-avatar">A</div><div style="min-width:0;"><div class="sp-name" id="sp-name">Admin</div><div class="sp-email" id="sp-email"></div></div></div>
+		</div>
+		<div class="mobile-menu-overlay"></div>
+		<div class="main-container"><div class="xs-pd-20-10 pd-ltr-20">
+				<div class="title pb-20"><h2 class="h3 mb-0">Plans &amp; Billing</h2><nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Subscriptions &amp; payments</li></ol></nav></div>
+				<div class="row pb-10">
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="b-plans">—</div><div class="font-14 text-secondary weight-500">Active Plans</div></div><div class="widget-icon"><div class="icon" data-color="#265ed7"><i class="icon-copy bi bi-receipt"></i></div></div></div></div></div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="b-records">—</div><div class="font-14 text-secondary weight-500">Billing Records</div></div><div class="widget-icon"><div class="icon" data-color="#09cc06"><i class="icon-copy bi bi-credit-card"></i></div></div></div></div></div></div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="b-paid">—</div><div class="font-14 text-secondary weight-500">Paid Amount</div></div><div class="widget-icon"><div class="icon" data-color="#ff5b5b"><i class="icon-copy bi bi-currency-rupee"></i></div></div></div></div></div></div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="b-pending">—</div><div class="font-14 text-secondary weight-500">Pending</div></div><div class="widget-icon"><div class="icon" data-color="#f59e0b"><i class="icon-copy bi bi-hourglass-split"></i></div></div></div></div></div></div>
+				</div>
+				<div class="card-box pb-10 mb-20">
+					<div class="h5 pd-20 mb-0">Plans</div>
+					<table class="data-table table nowrap" id="plans-table"><thead><tr><th>Plan</th><th>Monthly</th><th>Annual</th><th>Max Accounts</th><th>Max Automations</th><th>Monthly DMs</th><th>Active</th></tr></thead><tbody id="plans-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table>
+				</div>
+				<div class="card-box pb-10">
+					<div class="h5 pd-20 mb-0">Recent Billing</div>
+					<table class="data-table table nowrap" id="billing-table"><thead><tr><th>Account</th><th>Email</th><th>Amount</th><th>Status</th><th>Type</th><th>Cycle</th><th>Paid At</th></tr></thead><tbody id="billing-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table>
+				</div></div></div>
+		<script src="vendors/scripts/core.js"></script>
+		<script src="vendors/scripts/script.min.js"></script>
+		<script src="vendors/scripts/process.js"></script>
+		<script src="src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+		<script src="src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+		<script src="src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+		<script src="src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+		<script src="assets/js/config.js"></script>
+		<script src="assets/js/api.js"></script>
+		<script src="assets/js/auth.js"></script>
+		<script>
+			function listOf(res){ if(Array.isArray(res))return res; if(res&&typeof res==='object'){var k=['users','records','plans','tickets','accounts','automations','rows','nodes','data'];for(var i=0;i<k.length;i++)if(Array.isArray(res[k[i]]))return res[k[i]];} return []; }
+			function inr(n){return '₹'+Number(n||0).toLocaleString('en-IN');}
+			function ini(name){var p=String(name||'?').trim().split(/\s+/);return ((p[0]||'?')[0]||'?').toUpperCase()+((p[1]||'')[0]||'').toUpperCase();}
+			function fmtDate(iso){if(!iso)return '—';return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+			function bad(s,c){c=c||['#eef0f4','#6b7280'];return '<span class="badge badge-pill" style="background-color:'+c[0]+';color:'+c[1]+';">'+s+'</span>';}
+			function th(c){return c?'#09cc06':'#e95959';}
+		
+			window.__pageInit=function(){
+				return Promise.all([window.DMGO_API.get('/admin/plans'), window.DMGO_API.get('/admin/billing')]).then(function(r){
+					var plans=listOf(r[0]); var recs=listOf(r[1]);
+					document.getElementById('b-plans').textContent=plans.filter(function(p){return p.active;}).length;
+					document.getElementById('b-records').textContent=recs.length;
+					document.getElementById('b-paid').textContent=inr(recs.filter(function(x){return x.status==='paid';}).reduce(function(a,x){return a+(Number(x.amount)||0);},0));
+					document.getElementById('b-pending').textContent=recs.filter(function(x){return x.status!=='paid';}).length;
+					document.getElementById('plans-body').innerHTML=plans.map(function(p){return '<tr><td><b>'+p.name+'</b></td><td>'+inr(p.monthly)+'</td><td>'+inr(p.annual)+'</td><td>'+(p.maxAccounts||0)+'</td><td>'+(p.maxActiveAutomations||0)+'</td><td>'+(p.monthlyDms||0)+'</td><td>'+bad(p.active?'yes':'no',p.active?['#e7ebf5','#09cc06']:['#fdeaea','#e95959'])+'</td></tr>';}).join('');
+					document.getElementById('billing-body').innerHTML=recs.slice(0,50).map(function(x){return '<tr><td>'+(x.accountName||'—')+'</td><td>'+(x.accountEmail||x.customerEmail||'—')+'</td><td>'+inr(x.amount)+'</td><td>'+bad(x.status, x.status==='paid'?['#e7ebf5','#09cc06']:['#fff4e5','#f59e0b'])+'</td><td>'+(x.type||'—')+'</td><td>'+(x.billingCycle||'—')+'</td><td>'+fmtDate(x.paidAt)+'</td></tr>';}).join('');
+					if(window.jQuery&&jQuery.fn.DataTable){jQuery('#plans-table').DataTable({responsive:true,paging:false,searching:false,info:false});jQuery('#billing-table').DataTable({responsive:true,order:[[6,'desc']]});}
+				}).catch(function(){document.getElementById('plans-body').innerHTML='<tr><td colspan="7" class="text-center text-danger">Failed to load.</td></tr>';});
+			};</script>
+		<script src="assets/js/shell.js"></script>
+	</body>
+</html>
