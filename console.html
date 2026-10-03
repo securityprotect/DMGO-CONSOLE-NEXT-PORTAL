@@ -1,139 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>DMGO Console</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
-  <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
-  <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
-</head>
-<body>
-  <div class="header">
-    <div class="header-left">
-      <div class="menu-icon bi bi-list"></div>
-      <div class="brand-logo" style="font-weight:800;color:#fff;padding-left:6px;">DMGO Console</div>
-    </div>
-    <div class="header-right">
-      <div class="user-info-dropdown">
-        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-          <span class="user-icon bi bi-person-circle"></span>
-          <span class="user-name" id="admin-name">Admin</span>
-          <span class="caret-down bi bi-caret-down-fill"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <div class="dropdown-item-text" id="admin-email" style="font-size:12px;color:#888;"></div>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Log Out</a>
-        </div>
-      </div>
-    </div>
-  </div>
+	<head>
+		<meta charset="utf-8" />
+		<title>DMGO Console</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/dataTables.bootstrap4.min.css" />
+		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/responsive.bootstrap4.min.css" />
+		<link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+	</head>
+	<body>
+		<div class="pre-loader">
+			<div class="pre-loader-box">
+				<div class="loader-logo"><span style="font-weight:800;color:#265ed7;font-size:22px;">DMGO</span></div>
+				<div class="loader-progress" id="progress_div"><div class="bar" id="bar1"></div></div>
+				<div class="percent" id="percent1">0%</div>
+				<div class="loading-text">Loading…</div>
+			</div>
+		</div>
 
-  <div class="left-side-bar">
-    <div class="sidebar-menu">
-      <ul id="menu-list">
-        <li class="active"><a href="console.html"><i class="bi bi-grid"></i><span class="menu-text">Dashboard</span></a></li>
-        <li><a href="#"><i class="bi bi-people"></i><span class="menu-text">Users</span></a></li>
-        <li><a href="#"><i class="bi bi-receipt"></i><span class="menu-text">Plans &amp; Billing</span></a></li>
-        <li><a href="#"><i class="bi bi-ticket"></i><span class="menu-text">Tickets</span></a></li>
-        <li><a href="#"><i class="bi bi-gear"></i><span class="menu-text">Automations</span></a></li>
-        <li><a href="#"><i class="bi bi-instagram"></i><span class="menu-text">Instagram</span></a></li>
-        <li><a href="#"><i class="bi bi-whatsapp"></i><span class="menu-text">WhatsApp</span></a></li>
-        <li><a href="#"><i class="bi bi-shield-check"></i><span class="menu-text">Diagnostics</span></a></li>
-        <li><a href="#"><i class="bi bi-sliders"></i><span class="menu-text">Settings</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="mobile-menu-overlay"></div>
+		<div class="header">
+			<div class="header-left">
+				<div class="menu-icon bi bi-list"></div>
+				<div class="brand-logo" style="font-weight:800;color:#fff;font-size:18px;padding-left:6px;line-height:1;">DMGO Console</div>
+			</div>
+			<div class="header-right">
+				<div class="dashboard-setting user-notification">
+					<div class="dropdown">
+						<a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar"><i class="dw dw-settings2"></i></a>
+					</div>
+				</div>
+				<div class="user-notification">
+					<div class="dropdown">
+						<a class="dropdown-toggle no-arrow" href="javascript:;" role="button" data-toggle="dropdown">
+							<i class="icon-copy dw dw-notification"></i>
+							<span class="badge notification-active"></span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right">
+							<div class="notification-list mx-h-350 customscroll">
+								<ul id="notif-list">
+									<li><a href="#"><h3>System</h3><p>Live DMGO console — data pulled from production backend.</p></a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="user-info-dropdown">
+					<div class="dropdown">
+						<a class="dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown">
+							<span class="user-icon"><img src="vendors/images/photo1.jpg" alt="" /></span>
+							<span class="user-name" id="admin-name">Admin</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+							<div class="dropdown-item-text px-3 py-2" id="admin-email" style="font-size:12px;color:#888;"></div>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="console.html"><i class="dw dw-user1"></i> Console</a>
+							<a class="dropdown-item" href="#" id="logout-btn"><i class="dw dw-logout"></i> Log Out</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  <div class="main-container">
-    <div class="pd-20 height-100-p">
-      <div id="preview-banner" class="alert alert-warning" style="display:none;">
-        <strong>Preview mode</strong> — no live backend session. Add <code>?preview=1</code> is on.
-        Build your pages; test real auth on the VPS at console.dmgo.in.
-      </div>
+		<div class="left-side-bar">
+			<div class="brand-logo">
+				<a href="console.html">
+					<span class="dark-logo" style="font-weight:800;color:#1b2a4e;font-size:22px;letter-spacing:.5px;">DMGO</span>
+					<span class="light-logo" style="font-weight:800;color:#fff;font-size:22px;letter-spacing:.5px;">DMGO</span>
+				</a>
+				<div class="close-sidebar" data-toggle="left-sidebar-close"><i class="ion-close-round"></i></div>
+			</div>
+			<div class="menu-block customscroll">
+				<div class="sidebar-menu">
+					<ul id="accordion-menu">
+						<li class="active"><a href="console.html"><span class="micon bi bi-grid-1x2-fill"></span><span class="mtext">Dashboard</span></a></li>
+						<li><a href="console-users.html"><span class="micon bi bi-people-fill"></span><span class="mtext">Users</span></a></li>
+						<li><a href="console-plans.html"><span class="micon bi bi-receipt"></span><span class="mtext">Plans &amp; Billing</span></a></li>
+						<li><a href="console-tickets.html"><span class="micon bi bi-ticket-detailed"></span><span class="mtext">Tickets</span></a></li>
+						<li><a href="console-automations.html"><span class="micon bi bi-gear-fill"></span><span class="mtext">Automations</span></a></li>
+						<li><a href="console-instagram.html"><span class="micon bi bi-instagram"></span><span class="mtext">Instagram</span></a></li>
+						<li><a href="console-whatsapp.html"><span class="micon bi bi-whatsapp"></span><span class="mtext">WhatsApp</span></a></li>
+						<li><a href="console-diagnostics.html"><span class="micon bi bi-shield-check"></span><span class="mtext">Diagnostics</span></a></li>
+						<li><a href="console-settings.html"><span class="micon bi bi-sliders"></span><span class="mtext">Settings</span></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="mobile-menu-overlay"></div>
 
-      <div class="page-header">
-        <div class="row">
-          <div class="col-md-12">
-            <h4 class="h4">Dashboard</h4>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Console</li>
-              </ol>
-            </nav>
-          </div>
-        </div>
-      </div>
+		<div class="main-container">
+			<div class="xs-pd-20-10 pd-ltr-20">
+				<div class="title pb-20">
+					<h2 class="h3 mb-0">Creator Overview</h2>
+				</div>
 
-      <div class="row">
-        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-          <div class="card-box height-100-p pd-20">
-            <h5 class="text-blue">Signed in as</h5>
-            <p id="who" class="font-20 weight-600 mb-0">—</p>
-            <p id="who-email" class="text-muted" style="font-size:13px;">—</p>
-          </div>
-        </div>
-        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-          <div class="card-box height-100-p pd-20">
-            <h5 class="text-blue">Capabilities</h5>
-            <p id="caps" class="font-20 weight-600 mb-0">—</p>
-            <p class="text-muted" style="font-size:13px;">admin permissions loaded</p>
-          </div>
-        </div>
-        <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
-          <div class="card-box height-100-p pd-20">
-            <h5 class="text-blue">API status</h5>
-            <p id="api-status" class="font-20 weight-600 mb-0 text-success">connected</p>
-            <p class="text-muted" style="font-size:13px;" id="api-base">—</p>
-          </div>
-        </div>
-      </div>
+				<!-- Stat cards -->
+				<div class="row pb-10">
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+						<div class="card-box height-100-p widget-style3">
+							<div class="d-flex flex-wrap">
+								<div class="widget-data">
+									<div class="weight-700 font-24 text-dark" id="kpi-creators">—</div>
+									<div class="font-14 text-secondary weight-500">Total Creators</div>
+								</div>
+								<div class="widget-icon"><div class="icon" data-color="#265ed7"><i class="icon-copy bi bi-people-fill"></i></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+						<div class="card-box height-100-p widget-style3">
+							<div class="d-flex flex-wrap">
+								<div class="widget-data">
+									<div class="weight-700 font-24 text-dark" id="kpi-subs">—</div>
+									<div class="font-14 text-secondary weight-500">Active Subscriptions</div>
+								</div>
+								<div class="widget-icon"><div class="icon" data-color="#09cc06"><i class="icon-copy bi bi-check2-circle"></i></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+						<div class="card-box height-100-p widget-style3">
+							<div class="d-flex flex-wrap">
+								<div class="widget-data">
+									<div class="weight-700 font-24 text-dark" id="kpi-revenue">—</div>
+									<div class="font-14 text-secondary weight-500">Lifetime Revenue</div>
+								</div>
+								<div class="widget-icon"><div class="icon" data-color="#ff5b5b"><i class="icon-copy bi bi-currency-rupee"></i></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+						<div class="card-box height-100-p widget-style3">
+							<div class="d-flex flex-wrap">
+								<div class="widget-data">
+									<div class="weight-700 font-24 text-dark" id="kpi-issues">—</div>
+									<div class="font-14 text-secondary weight-500">Open Issues</div>
+								</div>
+								<div class="widget-icon"><div class="icon" data-color="#f59e0b"><i class="icon-copy bi bi-exclamation-triangle"></i></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-      <div class="card-box pd-20 mb-20">
-        <h5 class="mb-20">Where to build from here</h5>
-        <p>The backend already exposes every console API under <code>/api/admin/*</code>
-          (users, plans, billing, tickets, automations, instagram, whatsapp, diagnostics, settings…).
-          Each sidebar item above is a placeholder — drop a page next to <code>console.html</code>,
-          call <code>DMGO_API.get('/api/admin/&lt;resource&gt;')</code> and render. Auth + the API client
-          are already wired (cookie-based, same-origin). See <code>CONSOLE-SETUP.md</code>.</p>
-      </div>
-    </div>
-  </div>
+				<!-- Chart + small cards -->
+				<div class="row pb-10">
+					<div class="col-md-8 mb-20">
+						<div class="card-box height-100-p pd-20">
+							<div class="d-flex flex-wrap justify-content-between align-items-center pb-0 pb-md-3">
+								<div class="h5 mb-md-0">Creator Growth (last 7 days)</div>
+							</div>
+							<div id="growth-chart"></div>
+						</div>
+					</div>
+					<div class="col-md-4 mb-20">
+						<div class="card-box min-height-200px pd-20 mb-20" style="background-color:#455a64;">
+							<div class="d-flex justify-content-between pb-20 text-white">
+								<div class="icon h1 text-white"><i class="bi bi-instagram" aria-hidden="true"></i></div>
+								<div class="font-14 text-right"><div class="font-12">Connected accounts</div></div>
+							</div>
+							<div class="d-flex justify-content-between align-items-end">
+								<div class="text-white">
+									<div class="font-14">Instagram</div>
+									<div class="font-24 weight-500" id="kpi-ig">—</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-box min-height-200px pd-20" style="background-color:#265ed7;">
+							<div class="d-flex justify-content-between pb-20 text-white">
+								<div class="icon h1 text-white"><i class="bi bi-key" aria-hidden="true"></i></div>
+								<div class="font-14 text-right"><div class="font-12">Need reconnect</div></div>
+							</div>
+							<div class="d-flex justify-content-between align-items-end">
+								<div class="text-white">
+									<div class="font-14">Expiring Tokens</div>
+									<div class="font-24 weight-500" id="kpi-tokens">—</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/auth.js"></script>
-  <script>
-    (function () {
-      var banner = document.getElementById('preview-banner');
-      if (window.DMGO_AUTH.isPreview()) banner.style.display = 'block';
+				<!-- Recent signups + plan split + quick actions -->
+				<div class="row">
+					<div class="col-lg-4 col-md-6 mb-20">
+						<div class="card-box height-100-p pd-20 min-height-200px">
+							<div class="d-flex justify-content-between pb-10">
+								<div class="h5 mb-0">Recent Signups</div>
+								<a href="console-users.html" class="btn btn-sm btn-outline-primary">View all</a>
+							</div>
+							<div class="user-list">
+								<ul id="recent-signups"><li class="text-muted font-14">Loading…</li></ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6 mb-20">
+						<div class="card-box height-100-p pd-20 min-height-200px">
+							<div class="h5 mb-10">Plan Distribution</div>
+							<div id="plan-chart"></div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-12 mb-20">
+						<div class="card-box height-100-p pd-20 min-height-200px">
+							<div class="h5 mb-20">Quick Actions</div>
+							<div class="row">
+								<div class="col-6 mb-15"><a href="console-users.html" class="btn btn-outline-primary btn-block">Manage Users</a></div>
+								<div class="col-6 mb-15"><a href="console-tickets.html" class="btn btn-outline-primary btn-block">Tickets</a></div>
+								<div class="col-6 mb-15"><a href="console-instagram.html" class="btn btn-outline-primary btn-block">Instagram</a></div>
+								<div class="col-6 mb-15"><a href="console-diagnostics.html" class="btn btn-outline-primary btn-block">Diagnostics</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-      document.getElementById('api-base').textContent = 'API_BASE: ' + window.DMGO_API.API_BASE;
+				<!-- Recent creators table -->
+				<div class="card-box pb-10">
+					<div class="h5 pd-20 mb-0">Recent Creators</div>
+					<table class="data-table table nowrap" id="recent-creators">
+						<thead>
+							<tr>
+								<th class="table-plus">Name</th>
+								<th>Email</th>
+								<th>Plan</th>
+								<th>Subscription</th>
+								<th>Lifetime Spend</th>
+								<th>Joined</th>
+							</tr>
+						</thead>
+						<tbody id="recent-creators-body">
+							<tr><td colspan="6" class="text-center text-muted">Loading…</td></tr>
+						</tbody>
+					</table>
+				</div>
 
-      window.DMGO_AUTH.requireSession().then(function (s) {
-        var u = (s && s.user) || {};
-        document.getElementById('admin-name').textContent = u.name || 'Admin';
-        document.getElementById('admin-email').textContent = u.email || '';
-        document.getElementById('who').textContent = u.name || '—';
-        document.getElementById('who-email').textContent = u.email || '';
-        var caps = (s && s.capabilities) || [];
-        document.getElementById('caps').textContent = caps.length ? String(caps.length) : (s.preview ? 'preview' : '0');
-        document.getElementById('api-status').textContent = 'connected';
-        document.getElementById('api-status').className = 'font-20 weight-600 mb-0 text-success';
-      }).catch(function (e) {
-        document.getElementById('api-status').textContent = 'not authenticated';
-        document.getElementById('api-status').className = 'font-20 weight-600 mb-0 text-danger';
-      });
+				<div class="footer-wrap pd-20 mb-20 card-box">
+					DMGO Console — admin panel. Backend: <code>api.dmgo.in</code>
+				</div>
+			</div>
+		</div>
 
-      document.getElementById('logout-btn').addEventListener('click', function (e) {
-        e.preventDefault();
-        window.DMGO_AUTH.logout();
-      });
-    })();
-  </script>
-</body>
+		<!-- js -->
+		<script src="vendors/scripts/core.js"></script>
+		<script src="vendors/scripts/script.min.js"></script>
+		<script src="vendors/scripts/process.js"></script>
+		<script src="src/plugins/apexcharts/apexcharts.min.js"></script>
+		<script src="src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+		<script src="src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+		<script src="src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+		<script src="src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+		<script src="assets/js/config.js"></script>
+		<script src="assets/js/api.js"></script>
+		<script src="assets/js/auth.js"></script>
+		<script>
+			(function () {
+				function hidePreloader() {
+					var p = document.querySelector('.pre-loader');
+					if (p) p.style.display = 'none';
+				}
+				// Safety: never let the loader stick.
+				setTimeout(hidePreloader, 2500);
+
+				function inr(n) { return '₹' + Number(n || 0).toLocaleString('en-IN'); }
+				function ini(name) {
+					var parts = String(name || '?').trim().split(/\s+/);
+					return ((parts[0] || '?')[0] || '?').toUpperCase() + ((parts[1] || '')[0] || '').toUpperCase();
+				}
+				function fmtDate(iso) {
+					if (!iso) return '—';
+					var d = new Date(iso);
+					return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+				}
+				function statusBadge(s) {
+					var map = {
+						active: ['#e7ebf5', '#09cc06'], trialing: ['#fff4e5', '#f59e0b'],
+						canceled: ['#fdeaea', '#e95959'], expired: ['#fdeaea', '#e95959'],
+						past_due: ['#fff4e5', '#f59e0b'], free: ['#eef0f4', '#6b7280']
+					};
+					var c = map[s] || ['#eef0f4', '#6b7280'];
+					return '<span class="badge badge-pill" style="background-color:' + c[0] + ';color:' + c[1] + ';">' + s + '</span>';
+				}
+
+				function renderDashboard(users, kpis) {
+					var total = users.length;
+					var activeSubs = users.filter(function (u) { return u.subscriptionStatus === 'active' || u.subscriptionStatus === 'trialing'; }).length;
+					var revenue = users.reduce(function (a, u) { return a + (Number(u.totalSpend) || 0); }, 0);
+					document.getElementById('kpi-creators').textContent = total.toLocaleString('en-IN');
+					document.getElementById('kpi-subs').textContent = activeSubs.toLocaleString('en-IN');
+					document.getElementById('kpi-revenue').textContent = inr(revenue);
+					document.getElementById('kpi-issues').textContent = kpis && kpis.errors ? kpis.errors.open : '—';
+					document.getElementById('kpi-ig').textContent = users.filter(function (u) { return u.instagramStatus === 'connected'; }).length;
+					document.getElementById('kpi-tokens').textContent = kpis && kpis.tokens ? kpis.tokens.expiringSoon : '—';
+
+					// Growth: last 7 days signups
+					var days = [], counts = [], now = new Date();
+					for (var i = 6; i >= 0; i--) {
+						var d = new Date(now); d.setDate(now.getDate() - i);
+						days.push(d.toLocaleDateString('en-IN', { weekday: 'short' }));
+						var start = new Date(d); start.setHours(0, 0, 0, 0);
+						var end = new Date(d); end.setHours(23, 59, 59, 999);
+						counts.push(users.filter(function (u) { return u.createdAt && new Date(u.createdAt) >= start && new Date(u.createdAt) <= end; }).length);
+					}
+					if (window.ApexCharts) {
+						new ApexCharts(document.getElementById('growth-chart'), {
+							chart: { type: 'area', height: 280, toolbar: { show: false } },
+							series: [{ name: 'Signups', data: counts }],
+							colors: ['#265ed7'], dataLabels: { enabled: false },
+							stroke: { curve: 'smooth', width: 3 },
+							xaxis: { categories: days },
+							fill: { type: 'gradient', gradient: { opacityFrom: .4, opacityTo: 0 } },
+							grid: { borderColor: '#eee' }
+						}).render();
+					}
+
+					// Plan distribution
+					var planCounts = {};
+					users.forEach(function (u) { var p = u.plan || 'unknown'; planCounts[p] = (planCounts[p] || 0) + 1; });
+					var planLabels = Object.keys(planCounts), planData = planLabels.map(function (k) { return planCounts[k]; });
+					if (window.ApexCharts) {
+						new ApexCharts(document.getElementById('plan-chart'), {
+							chart: { type: 'donut', height: 230 },
+							series: planData, labels: planLabels, legend: { position: 'bottom' },
+							colors: ['#265ed7', '#09cc06', '#ff5b5b', '#f59e0b', '#6b7280', '#9556c7']
+						}).render();
+					}
+
+					// Recent signups list (top 6 newest)
+					var recent = users.slice(0, 6);
+					var ul = document.getElementById('recent-signups');
+					ul.innerHTML = recent.map(function (u) {
+						return '<li class="d-flex align-items-center justify-content-between">' +
+							'<div class="name-avatar d-flex align-items-center pr-2">' +
+							'<div class="avatar mr-2 flex-shrink-0" style="background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">' + ini(u.name) + '</div>' +
+							'<div class="txt"><div class="font-14 weight-600">' + (u.name || 'Unnamed') + '</div>' +
+							'<div class="font-12 weight-500" data-color="#b2b1b6">' + (u.email || '') + '</div></div></div>' +
+							'<div class="cta flex-shrink-0"><span class="badge badge-pill" style="background-color:#e7ebf5;color:#265ed7;">' + (u.plan || 'starter') + '</span></div></li>';
+					}).join('');
+
+					// Recent creators table (top 10 newest)
+					var rows = users.slice(0, 10).map(function (u) {
+						return '<tr><td class="table-plus"><div class="name-avatar d-flex align-items-center">' +
+							'<div class="avatar mr-2 flex-shrink-0" style="background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">' + ini(u.name) + '</div>' +
+							'<div class="txt"><div class="weight-600">' + (u.name || 'Unnamed') + '</div></div></div></td>' +
+							'<td>' + (u.email || '—') + '</td>' +
+							'<td>' + (u.plan || 'starter') + '</td>' +
+							'<td>' + statusBadge(u.subscriptionStatus) + '</td>' +
+							'<td>' + inr(u.totalSpend) + '</td>' +
+							'<td>' + fmtDate(u.createdAt) + '</td></tr>';
+					}).join('');
+					document.getElementById('recent-creators-body').innerHTML = rows;
+					if (window.jQuery && jQuery.fn.DataTable) {
+						jQuery('#recent-creators').DataTable({ responsive: true, paging: false, searching: false, info: false, order: [[5, 'desc']] });
+					}
+				}
+
+				window.DMGO_AUTH.requireSession().then(function (s) {
+					var u = (s && s.user) || {};
+					document.getElementById('admin-name').textContent = u.name || 'Admin';
+					document.getElementById('admin-email').textContent = u.email || '';
+					var caps = (s && s.capabilities) || [];
+					document.getElementById('notif-list').innerHTML =
+						'<li><a href="#"><h3>' + (u.name || 'Admin') + '</h3><p>' + (caps.length || 0) + ' admin capabilities loaded.</p></a></li>';
+
+					Promise.all([
+						window.DMGO_API.get('/admin/users'),
+						window.DMGO_API.get('/admin/dashboard-kpis').catch(function () { return null; })
+					]).then(function (res) {
+						var users = (res[0] && res[0].users) ? res[0].users : [];
+						renderDashboard(users, res[1]);
+						hidePreloader();
+					}).catch(function () {
+						document.getElementById('recent-creators-body').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data.</td></tr>';
+						hidePreloader();
+					});
+				}).catch(function () {
+					window.location.href = 'login.html';
+				});
+
+				document.getElementById('logout-btn').addEventListener('click', function (e) {
+					e.preventDefault();
+					window.DMGO_AUTH.logout();
+				});
+			})();
+		</script>
+	</body>
 </html>
