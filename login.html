@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DMGO Console — Sign in</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -18,28 +18,35 @@
     .form-group label { font-weight: 600; font-size: 13px; color: #444; }
     .alert-dmgo { display:none; margin-top: 14px; }
   </style>
-</head>
+	<link rel="stylesheet" href="assets/css/dmgo.css" />
+	</head>
 <body>
   <div class="dmgo-login-wrap">
     <div class="dmgo-login-card">
       <div class="dmgo-brand">DMGO Console</div>
       <div class="dmgo-sub">Admin sign-in — manage everything from here.</div>
 
-      <form id="login-form" autocomplete="on">
+      <form id="login-form" autocomplete="on" novalidate>
         <div class="form-group mb-3">
           <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="you@dmgo.in" required />
+          <input type="email" class="form-control" id="email" placeholder="you@dmgo.in"
+                 autocomplete="username" required />
         </div>
         <div class="form-group mb-3">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="••••••••" required />
+          <input type="password" class="form-control" id="password" placeholder="••••••••"
+                 autocomplete="current-password" required />
         </div>
+        <!-- MFA is a STEP in sign-in, not an error. Shown progressively. -->
         <div class="form-group mb-3" id="mfa-group" style="display:none;">
-          <label for="mfa">MFA code</label>
-          <input type="text" class="form-control" id="mfa" placeholder="123456" inputmode="numeric" />
+          <label for="mfa">Two-factor code</label>
+          <input type="text" class="form-control" id="mfa" placeholder="123456"
+                 inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+          <small class="form-text text-muted">Enter the 6-digit code from your authenticator app.</small>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Sign in</button>
-        <div class="alert alert-danger alert-dmgo" id="error-box"></div>
+        <div class="alert alert-info alert-dmgo" id="notice-box" role="status" aria-live="polite"></div>
+        <div class="alert alert-danger alert-dmgo" id="error-box" role="alert"></div>
       </form>
     </div>
   </div>
@@ -53,8 +60,10 @@
       var btn = document.getElementById('submit-btn');
       var errBox = document.getElementById('error-box');
       var mfaGroup = document.getElementById('mfa-group');
+      var noticeBox = document.getElementById('notice-box');
 
-      function showError(msg) { errBox.textContent = msg; errBox.style.display = 'block'; }
+      function showError(msg) { noticeBox.style.display = 'none'; errBox.textContent = msg; errBox.style.display = 'block'; }
+      function showNotice(msg) { errBox.style.display = 'none'; noticeBox.textContent = msg; noticeBox.style.display = 'block'; }
 
       // If already authenticated, skip login.
       if (!window.DMGO_AUTH.isPreview()) {
@@ -74,8 +83,9 @@
         window.DMGO_AUTH.login(email, password, mfa).then(function (res) {
           if (res && res.mfaEnabled && !mfa) {
             mfaGroup.style.display = 'block';
-            btn.disabled = false; btn.textContent = 'Sign in';
-            showError('MFA code required.');
+            btn.disabled = false; btn.textContent = 'Verify code';
+            showNotice('Almost done — enter your 6-digit two-factor code to finish signing in.');
+            document.getElementById('mfa').focus();
             return;
           }
           window.location.href = 'console.html';

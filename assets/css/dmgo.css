@@ -1,0 +1,193 @@
+/* ============================================================================
+   DMGO Console — Consistency & Polish Layer
+   ----------------------------------------------------------------------------
+   IMPORTANT: This file is ADDITIVE ONLY. It deliberately does NOT change the
+   deskapp template's identity (sidebar colour, header colour, body font or
+   base text colour). Those come from vendors/styles/style.css and stay exactly
+   as the template ships.
+
+   What this layer adds:
+   - shared spacing / radius / elevation tokens (used only by NEW elements)
+   - accessible focus rings and a skip link
+   - consistent card + table presentation
+   - semantic status pills, skeletons, empty states, toasts
+   - tabular numerals for counts and money
+   - reduced-motion support
+   ========================================================================== */
+
+:root {
+  /* --- Status semantics (aligned to the template's palette family) -------- */
+  --dmgo-success: #16a34a;
+  --dmgo-success-bg: #e7f6ec;
+  --dmgo-warning: #b45309;
+  --dmgo-warning-bg: #fdf3e3;
+  --dmgo-danger: #dc2626;
+  --dmgo-danger-bg: #fdecec;
+  --dmgo-info: #0e7490;
+  --dmgo-info-bg: #e4f4f8;
+  --dmgo-neutral-bg: #eef1f6;
+  --dmgo-neutral-fg: #4a5670;
+
+  /* --- Shared rhythm (used by new components only) ------------------------ */
+  --dmgo-s-1: 4px;  --dmgo-s-2: 8px;  --dmgo-s-3: 12px;
+  --dmgo-s-4: 16px; --dmgo-s-5: 20px; --dmgo-s-6: 24px;
+  --dmgo-s-8: 32px; --dmgo-s-10: 40px;
+
+  --dmgo-r-sm: 6px;
+  --dmgo-r-md: 10px;
+  --dmgo-r-lg: 14px;
+  --dmgo-r-pill: 999px;
+
+  --dmgo-e-1: 0 1px 2px rgba(16, 24, 40, .05);
+  --dmgo-e-2: 0 2px 8px rgba(16, 24, 40, .07);
+  --dmgo-e-3: 0 8px 24px rgba(16, 24, 40, .10);
+
+  --dmgo-t-fast: 120ms;
+  --dmgo-t-base: 200ms;
+  --dmgo-ease: cubic-bezier(.4, 0, .2, 1);
+
+  --dmgo-border: rgba(3, 30, 35, .10);
+}
+
+/* ============================================================================
+   Accessibility
+   ========================================================================== */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid #265ed7;
+  outline-offset: 2px;
+  border-radius: var(--dmgo-r-sm);
+}
+
+.dmgo-skip {
+  position: absolute; left: -9999px; top: 0; z-index: 2000;
+  background: #fff; color: #031e23;
+  padding: var(--dmgo-s-3) var(--dmgo-s-4);
+  border-radius: var(--dmgo-r-sm);
+  box-shadow: var(--dmgo-e-3);
+}
+.dmgo-skip:focus { left: var(--dmgo-s-4); top: var(--dmgo-s-4); }
+
+/* ============================================================================
+   Cards — gentle polish, same identity
+   ========================================================================== */
+.card-box {
+  border-radius: var(--dmgo-r-lg);
+  overflow: hidden;
+  transition: box-shadow var(--dmgo-t-base) var(--dmgo-ease);
+}
+.card-box:hover { box-shadow: var(--dmgo-e-2); }
+
+/* Card heading inside console pages */
+.card-box > .h5, .dmgo-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--dmgo-s-3);
+  padding: var(--dmgo-s-4) var(--dmgo-s-5) !important;
+  border-bottom: 1px solid var(--dmgo-border);
+  font-weight: 600; margin: 0 !important;
+}
+
+/* ============================================================================
+   Tables — professional data presentation (colours inherited from template)
+   ========================================================================== */
+.data-table, .table { font-size: 13px; }
+
+.table > thead > tr > th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--dmgo-border) !important;
+  padding: var(--dmgo-s-3) var(--dmgo-s-4);
+}
+.table > tbody > tr > td {
+  padding: var(--dmgo-s-3) var(--dmgo-s-4);
+  vertical-align: middle;
+}
+.table > tbody > tr:hover > td { background: rgba(3, 30, 35, .03); }
+.table td.num, .table td.amount { text-align: right; }
+
+/* DataTables chrome */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+  border-radius: var(--dmgo-r-sm);
+  padding: 6px var(--dmgo-s-3);
+  font-size: 13px;
+}
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter { font-size: 12px; }
+.dataTables_wrapper .pagination .page-link {
+  border-radius: var(--dmgo-r-sm); margin: 0 2px;
+}
+
+/* ============================================================================
+   Status pills — semantic, never colour-only
+   ========================================================================== */
+.dmgo-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: var(--dmgo-r-pill);
+  padding: 4px 10px; font-size: 11px; font-weight: 600;
+  background: var(--dmgo-neutral-bg); color: var(--dmgo-neutral-fg);
+}
+.dmgo-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+}
+.dmgo-badge.is-success { background: var(--dmgo-success-bg); color: var(--dmgo-success); }
+.dmgo-badge.is-warning { background: var(--dmgo-warning-bg); color: var(--dmgo-warning); }
+.dmgo-badge.is-danger  { background: var(--dmgo-danger-bg);  color: var(--dmgo-danger); }
+.dmgo-badge.is-info    { background: var(--dmgo-info-bg);    color: var(--dmgo-info); }
+
+/* ============================================================================
+   Loading / empty / feedback
+   ========================================================================== */
+.dmgo-skeleton {
+  background: linear-gradient(90deg, rgba(3,30,35,.06) 25%, rgba(3,30,35,.03) 37%, rgba(3,30,35,.06) 63%);
+  background-size: 400% 100%;
+  animation: dmgo-shimmer 1.4s ease infinite;
+  border-radius: var(--dmgo-r-sm);
+  height: 14px;
+}
+@keyframes dmgo-shimmer {
+  0% { background-position: 100% 50%; } 100% { background-position: 0 50%; }
+}
+
+.dmgo-empty {
+  padding: var(--dmgo-s-10) var(--dmgo-s-5);
+  text-align: center; opacity: .75;
+}
+.dmgo-empty .dmgo-empty-icon { font-size: 28px; display: block; margin-bottom: var(--dmgo-s-3); }
+
+.dmgo-toast-wrap { position: fixed; right: var(--dmgo-s-5); bottom: var(--dmgo-s-5); z-index: 1500; }
+.dmgo-toast {
+  min-width: 260px; margin-top: var(--dmgo-s-2);
+  background: #fff; border: 1px solid var(--dmgo-border);
+  border-left: 4px solid #265ed7;
+  border-radius: var(--dmgo-r-md); box-shadow: var(--dmgo-e-3);
+  padding: var(--dmgo-s-3) var(--dmgo-s-4); font-size: 13px; color: #031e23;
+}
+.dmgo-toast.is-success { border-left-color: var(--dmgo-success); }
+.dmgo-toast.is-danger  { border-left-color: var(--dmgo-danger); }
+.dmgo-toast.is-warning { border-left-color: var(--dmgo-warning); }
+
+/* ============================================================================
+   Utilities
+   ========================================================================== */
+.dmgo-mono { font-family: SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+.dmgo-num  { font-variant-numeric: tabular-nums; }
+.dmgo-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; }
+.dmgo-card {
+  background: #fff; border: 1px solid var(--dmgo-border); border-radius: var(--dmgo-r-lg);
+}
+
+/* ============================================================================
+   Motion & responsive
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+@media (max-width: 767.98px) {
+  .card-box > .h5, .dmgo-card-head { padding: var(--dmgo-s-3) var(--dmgo-s-4) !important; }
+}
