@@ -81,7 +81,7 @@
 					document.getElementById('a-paused').textContent=a.filter(function(x){return x.status==='paused';}).length;
 					document.getElementById('a-dms').textContent=a.reduce(function(s,x){return s+(Number(x.dmsSent)||0);},0).toLocaleString('en-IN');
 					document.getElementById('auto-body').innerHTML=a.slice(0,50).map(function(x){return '<tr><td><b>'+(x.name||'—')+'</b></td><td>'+(x.userName||x.userEmail||'—')+'</td><td>'+(x.account||x.instagramUsername||'—')+'</td><td>'+bad(x.status,x.status==='active'?['#e7ebf5','#09cc06']:['#fff4e5','#f59e0b'])+'</td><td>'+(Array.isArray(x.keywords)?x.keywords.slice(0,3).join(', '):'—')+'</td><td>'+(x.replyMode||'—')+'</td><td>'+(Number(x.dmsSent)||0)+'</td><td>'+((Number(x.successRate)||0).toFixed(0))+'%</td><td>'+fmtDate(x.lastFired)+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#auto-table').DataTable({responsive:true,order:[[8,'desc']]});
+					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#auto-table').DataTable({order:[[8,'desc']]});
 				}).catch(function(){document.getElementById('auto-body').innerHTML='<tr><td colspan="9" class="text-center text-danger">Failed to load.</td></tr>';});
 			};</script>
 		<script src="assets/js/shell.js"></script>

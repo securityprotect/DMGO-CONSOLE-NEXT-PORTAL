@@ -81,7 +81,7 @@
 					document.getElementById('i-expiring').textContent=a.filter(function(x){return x.tokenExpiresInDays!=null && x.tokenExpiresInDays<=14;}).length;
 					document.getElementById('i-business').textContent=a.filter(function(x){return x.isBusiness||x.accountType==='BUSINESS';}).length;
 					document.getElementById('ig-body').innerHTML=a.slice(0,50).map(function(x){return '<tr><td><b>'+(x.username||'—')+'</b></td><td>'+(x.userName||x.userEmail||'—')+'</td><td>'+(x.accountType||'—')+'</td><td>'+bad(x.connectionStatus,x.connectionStatus==='connected'?['#e7ebf5','#09cc06']:['#fdeaea','#e95959'])+'</td><td>'+(x.tokenExpiresInDays!=null?x.tokenExpiresInDays:'—')+'</td><td>'+(Number(x.followersCount)||0).toLocaleString('en-IN')+'</td><td>'+(x.messagingState||'—')+'</td><td>'+(x.webhookSubscriptionStatus||'—')+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#ig-table').DataTable({responsive:true,order:[[4,'asc']]});
+					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#ig-table').DataTable({order:[[4,'asc']]});
 				}).catch(function(){document.getElementById('ig-body').innerHTML='<tr><td colspan="8" class="text-center text-danger">Failed to load.</td></tr>';});
 			};</script>
 		<script src="assets/js/shell.js"></script>

@@ -81,7 +81,7 @@
 					document.getElementById('t-prio').textContent=t.filter(function(x){return x.priority==='high'||x.priority==='critical';}).length;
 					document.getElementById('t-unassigned').textContent=t.filter(function(x){return !x.assignedAdminId && !x.assignee;}).length;
 					document.getElementById('tickets-body').innerHTML=t.slice(0,50).map(function(x){return '<tr><td>'+(x.ticketNumber||x.id||'—')+'</td><td>'+(x.subject||x.title||'—')+'</td><td>'+bad(x.status)+'</td><td>'+bad(x.priority,x.priority==='high'||x.priority==='critical'?['#fdeaea','#e95959']:['#eef0f4','#6b7280'])+'</td><td>'+(x.supportQueue||x.queue||'—')+'</td><td>'+(x.reporterName||x.name||'—')+'<br><small class="text-muted">'+(x.reporterEmail||x.email||'')+'</small></td><td>'+fmtDate(x.createdAt)+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#tickets-table').DataTable({responsive:true,order:[[6,'desc']]});
+					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#tickets-table').DataTable({order:[[6,'desc']]});
 				}).catch(function(){document.getElementById('tickets-body').innerHTML='<tr><td colspan="7" class="text-center text-danger">Failed to load.</td></tr>';});
 			};</script>
 		<script src="assets/js/shell.js"></script>

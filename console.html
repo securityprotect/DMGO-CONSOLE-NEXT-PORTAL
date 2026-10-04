@@ -180,10 +180,7 @@
 
 				<div class="card-box pb-10">
 					<div class="h5 pd-20 mb-0">Recent Creators</div>
-					<table class="data-table table nowrap" id="recent-creators">
-						<thead><tr><th class="table-plus">Name</th><th>Email</th><th>Plan</th><th>Subscription</th><th>Lifetime Spend</th><th>Joined</th></tr></thead>
-						<tbody id="recent-creators-body"><tr><td colspan="6" class="text-center text-muted">Loading…</td></tr></tbody>
-					</table>
+					<div class="table-responsive"></div>
 				</div>
 
 				<div class="footer-wrap pd-20 mb-20 card-box">DMGO Console — admin panel. Backend: <code>api.dmgo.in</code></div>
@@ -232,7 +229,7 @@
 					if (window.ApexCharts) new ApexCharts(document.getElementById('plan-chart'),{chart:{type:'donut',height:230},series:pd,labels:pl,legend:{position:'bottom'},colors:['#265ed7','#09cc06','#ff5b5b','#f59e0b','#6b7280','#9556c7']}).render();
 					document.getElementById('recent-signups').innerHTML = users.slice(0,6).map(function(u){return '<li class="d-flex align-items-center justify-content-between"><div class="name-avatar d-flex align-items-center pr-2"><div class="avatar mr-2 flex-shrink-0" style="background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">'+ini(u.name)+'</div><div class="txt"><div class="font-14 weight-600">'+(u.name||'Unnamed')+'</div><div class="font-12 weight-500" style="color:#b2b1b6;">'+(u.email||'')+'</div></div></div><div class="cta flex-shrink-0"><span class="badge badge-pill" style="background-color:#e7ebf5;color:#265ed7;">'+(u.plan||'starter')+'</span></div></li>';}).join('');
 					document.getElementById('recent-creators-body').innerHTML = users.slice(0,10).map(function(u){return '<tr><td class="table-plus"><div class="name-avatar d-flex align-items-center"><div class="avatar mr-2 flex-shrink-0" style="background:#265ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">'+ini(u.name)+'</div><div class="txt"><div class="weight-600">'+(u.name||'Unnamed')+'</div></div></div></td><td>'+(u.email||'—')+'</td><td>'+(u.plan||'starter')+'</td><td>'+statusBadge(u.subscriptionStatus)+'</td><td>'+inr(u.totalSpend)+'</td><td>'+fmtDate(u.createdAt)+'</td></tr>';}).join('');
-					if (window.jQuery && jQuery.fn.DataTable) jQuery('#recent-creators').DataTable({responsive:true,paging:false,searching:false,info:false,order:[[5,'desc']]});
+					if (window.jQuery && jQuery.fn.DataTable) jQuery('#recent-creators').DataTable({paging:false,searching:false,info:false,order:[[5,'desc']]});
 			}).then(function(){ return window.DMGO_API.get('/admin/dashboard-kpis').catch(function(){return null;}); }).then(function(kpis){
 					document.getElementById('kpi-issues').textContent = kpis && kpis.errors ? kpis.errors.open : '—';
 					document.getElementById('kpi-tokens').textContent = kpis && kpis.tokens ? kpis.tokens.expiringSoon : '—';

@@ -191,3 +191,25 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 @media (max-width: 767.98px) {
   .card-box > .h5, .dmgo-card-head { padding: var(--dmgo-s-3) var(--dmgo-s-4) !important; }
 }
+
+/* ============================================================================
+   Sidebar — active item visibility (template-faithful correction)
+   ----------------------------------------------------------------------------
+   The template's built-in active style uses the SAME colour as the dark
+   sidebar background, so the current page indicator is invisible. This is a
+   tiny additive fix: subtle overlay + brand-colour accent bar. Nothing else
+   about the template's sidebar is changed.
+   ========================================================================== */
+.left-side-bar .sidebar-menu > ul > li.active > a {
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+  font-weight: 600;
+  position: relative;
+}
+.left-side-bar .sidebar-menu > ul > li.active > a::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 3px; border-radius: 0 3px 3px 0;
+  background: #265ed7;
+}

@@ -100,7 +100,7 @@
 						'<td>'+badge(x.instagramStatus,igMap[x.instagramStatus]||['#eef0f4','#6b7280'])+'</td>'+
 						'<td>'+inr(x.totalSpend)+'</td><td>'+(x.status||'active')+'</td><td>'+fmtDate(x.createdAt)+'</td></tr>';
 					}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#users-table').DataTable({responsive:true,order:[[8,'desc']]});
+					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#users-table').DataTable({order:[[8,'desc']]});
 				}).catch(function(){document.getElementById('users-body').innerHTML='<tr><td colspan="9" class="text-center text-danger">Failed to load.</td></tr>';});
 			};
 		</script>

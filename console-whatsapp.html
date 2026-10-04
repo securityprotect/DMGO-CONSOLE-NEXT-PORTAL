@@ -81,7 +81,7 @@
 					document.getElementById('w-cats').textContent=Object.keys(cats).length;
 					document.getElementById('w-gated').textContent=n.filter(function(x){return x.requiresCapability;}).length;
 					document.getElementById('wa-body').innerHTML=n.map(function(x){return '<tr><td><b>'+(x.type||'—')+'</b></td><td>'+(x.category||'—')+'</td><td>'+(x.requiresCapability?bad(x.requiresCapability,['#fff4e5','#f59e0b']):'—')+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#wa-table').DataTable({responsive:true,paging:false,searching:true,info:false});
+					if(window.jQuery&&jQuery.fn.DataTable)jQuery('#wa-table').DataTable({paging:false,searching:true,info:false});
 				}).catch(function(){document.getElementById('wa-body').innerHTML='<tr><td colspan="3" class="text-center text-danger">Failed to load.</td></tr>';});
 			};</script>
 		<script src="assets/js/shell.js"></script>

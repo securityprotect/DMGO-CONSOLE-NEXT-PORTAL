@@ -174,7 +174,7 @@
 			function badge(text, color){ color=color||statusColor(text); return '<span class="badge badge-pill" style="background-color:'+color+'22;color:'+color+';">' + esc(text) + '</span>'; }
 			function fmtDate(iso){ if(!iso) return '—'; try { return new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e){ return esc(iso); } }
 			function dt(tableId){ if(window.jQuery && jQuery.fn.DataTable && jQuery(tableId).length){ try { var t=jQuery(tableId).DataTable(); if(t) t.destroy(); } catch(e){} } }
-			function renderTable(tableId, bodyId, rows, cols){ dt(tableId); var tb=el(bodyId); if(!rows || !rows.length){ tb.innerHTML='<tr><td colspan="'+cols.length+'" class="text-center text-muted">No records.</td></tr>'; return; } tb.innerHTML=rows.map(function(r){ return '<tr>'+cols.map(function(c){ return '<td>'+ (c.html? c.html(r) : esc(r[c.k])) +'</td>'; }).join('')+'</tr>'; }).join(''); if(window.jQuery && jQuery.fn.DataTable){ jQuery(tableId).DataTable({responsive:true,paging:true,searching:true,info:false,pageLength:25}); } }
+			function renderTable(tableId, bodyId, rows, cols){ dt(tableId); var tb=el(bodyId); if(!rows || !rows.length){ tb.innerHTML='<tr><td colspan="'+cols.length+'" class="text-center text-muted">No records.</td></tr>'; return; } tb.innerHTML=rows.map(function(r){ return '<tr>'+cols.map(function(c){ return '<td>'+ (c.html? c.html(r) : esc(r[c.k])) +'</td>'; }).join('')+'</tr>'; }).join(''); if(window.jQuery && jQuery.fn.DataTable){ jQuery(tableId).DataTable({paging:true,searching:true,info:false,pageLength:25}); } }
 
 			// ---------- SYSTEM HEALTH (fixed mapping) ----------
 			function loadSystem(){

@@ -53,11 +53,11 @@
 				</div>
 				<div class="card-box pb-10 mb-20">
 					<div class="h5 pd-20 mb-0">Plans</div>
-					<table class="data-table table nowrap" id="plans-table"><thead><tr><th>Plan</th><th>Monthly</th><th>Annual</th><th>Max Accounts</th><th>Max Automations</th><th>Monthly DMs</th><th>Active</th></tr></thead><tbody id="plans-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table>
+					<div class="table-responsive"><table class="data-table table nowrap" id="plans-table"><thead><tr><th>Plan</th><th>Monthly</th><th>Annual</th><th>Max Accounts</th><th>Max Automations</th><th>Monthly DMs</th><th>Active</th></tr></thead><tbody id="plans-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table></div>
 				</div>
 				<div class="card-box pb-10">
 					<div class="h5 pd-20 mb-0">Recent Billing</div>
-					<table class="data-table table nowrap" id="billing-table"><thead><tr><th>Account</th><th>Email</th><th>Amount</th><th>Status</th><th>Type</th><th>Cycle</th><th>Paid At</th></tr></thead><tbody id="billing-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table>
+					<div class="table-responsive"><table class="data-table table nowrap" id="billing-table"><thead><tr><th>Account</th><th>Email</th><th>Amount</th><th>Status</th><th>Type</th><th>Cycle</th><th>Paid At</th></tr></thead><tbody id="billing-body"><tr><td colspan="7" class="text-center text-muted">Loading…</td></tr></tbody></table></div>
 				</div></div></div>
 		<script src="vendors/scripts/core.js"></script>
 		<script src="vendors/scripts/script.min.js"></script>
@@ -86,7 +86,7 @@
 					document.getElementById('b-pending').textContent=recs.filter(function(x){return x.status!=='paid';}).length;
 					document.getElementById('plans-body').innerHTML=plans.map(function(p){return '<tr><td><b>'+p.name+'</b></td><td>'+inr(p.monthly)+'</td><td>'+inr(p.annual)+'</td><td>'+(p.maxAccounts||0)+'</td><td>'+(p.maxActiveAutomations||0)+'</td><td>'+(p.monthlyDms||0)+'</td><td>'+bad(p.active?'yes':'no',p.active?['#e7ebf5','#09cc06']:['#fdeaea','#e95959'])+'</td></tr>';}).join('');
 					document.getElementById('billing-body').innerHTML=recs.slice(0,50).map(function(x){return '<tr><td>'+(x.accountName||'—')+'</td><td>'+(x.accountEmail||x.customerEmail||'—')+'</td><td>'+inr(x.amount)+'</td><td>'+bad(x.status, x.status==='paid'?['#e7ebf5','#09cc06']:['#fff4e5','#f59e0b'])+'</td><td>'+(x.type||'—')+'</td><td>'+(x.billingCycle||'—')+'</td><td>'+fmtDate(x.paidAt)+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable){jQuery('#plans-table').DataTable({responsive:true,paging:false,searching:false,info:false});jQuery('#billing-table').DataTable({responsive:true,order:[[6,'desc']]});}
+					if(window.jQuery&&jQuery.fn.DataTable){jQuery('#plans-table').DataTable({paging:false,searching:false,info:false});jQuery('#billing-table').DataTable({order:[[6,'desc']]});}
 				}).catch(function(){document.getElementById('plans-body').innerHTML='<tr><td colspan="7" class="text-center text-danger">Failed to load.</td></tr>';});
 			};</script>
 		<script src="assets/js/shell.js"></script>
