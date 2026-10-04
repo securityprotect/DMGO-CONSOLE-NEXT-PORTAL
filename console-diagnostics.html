@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>DMGO Console — Diagnostics</title>
+		<title>DMGO Console — Troubleshooting</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,9 +12,12 @@
 		<link rel="stylesheet" type="text/css" href="src/plugins/datatables/css/responsive.bootstrap4.min.css" />
 		<link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
 		<style>
-
-
-
+			.tool-card .tool-body { display: none; }
+			.tool-card.open .tool-body { display: block; }
+			.tool-card .tool-head { cursor: pointer; }
+			.json-out { background:#0f172a; color:#e2e8f0; padding:12px; border-radius:6px; font-size:12px; white-space:pre-wrap; word-break:break-word; max-height:360px; overflow:auto; }
+			.step-pass { color:#09cc06; } .step-warn { color:#f59e0b; } .step-fail { color:#e95959; }
+			.cap-pill { font-size:11px; padding:2px 8px; border-radius:10px; background:#eef0f4; color:#6b7280; margin:2px; display:inline-block; }
 		</style>
 	</head>
 	<body>
@@ -43,21 +46,112 @@
 		</div>
 		<div class="mobile-menu-overlay"></div>
 		<div class="main-container"><div class="xs-pd-20-10 pd-ltr-20">
-				<div class="title pb-20"><h2 class="h3 mb-0">Diagnostics</h2><nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Backend system health</li></ol></nav></div>
-				<div class="row pb-10">
-					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-env">—</div><div class="font-14 text-secondary weight-500">Critical Env Set</div></div><div class="widget-icon"><div class="icon" data-color="#09cc06"><i class="icon-copy bi bi-shield-check"></i></div></div></div></div></div></div>
-					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-missing">—</div><div class="font-14 text-secondary weight-500">Missing Critical</div></div><div class="widget-icon"><div class="icon" data-color="#ff5b5b"><i class="icon-copy bi bi-exclamation-triangle"></i></div></div></div></div></div></div>
-					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-coll">—</div><div class="font-14 text-secondary weight-500">Collections</div></div><div class="widget-icon"><div class="icon" data-color="#265ed7"><i class="icon-copy bi bi-database"></i></div></div></div></div></div></div>
+			<div class="title pb-10"><h2 class="h3 mb-0">Troubleshooting Hub</h2><nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active">Detailed system &amp; account diagnostics</li></ol></nav></div>
+
+			<div id="cap-banner" class="card-box pb-10 mb-20" style="display:none;"></div>
+
+			<!-- ============ SYSTEM HEALTH ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">System Health</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadSystem()">Refresh</button></div>
+				<div class="row pb-10 px-3">
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-env">—</div><div class="font-14 text-secondary weight-500">Critical Env Set</div></div><div class="widget-icon"><div class="icon" data-color="#09cc06"><i class="icon-copy bi bi-shield-check"></i></div></div></div></div></div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="weight-700 font-24 text-dark" id="d-missing">—</div><div class="font-14 text-secondary weight-500">Missing Critical</div></div><div class="widget-icon"><div class="icon" data-color="#ff5b5b"><i class="icon-copy bi bi-exclamation-triangle"></i></div></div></div></div></div>
+					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-coll">—</div><div class="font-14 text-secondary weight-500">Collections</div></div><div class="widget-icon"><div class="icon" data-color="#265ed7"><i class="icon-copy bi bi-database"></i></div></div></div></div></div>
 					<div class="col-xl-3 col-lg-3 col-md-6 mb-20"><div class="card-box height-100-p widget-style3"><div class="d-flex flex-wrap"><div class="widget-data"><div class="weight-700 font-24 text-dark" id="d-docs">—</div><div class="font-14 text-secondary weight-500">Total Documents</div></div><div class="widget-icon"><div class="icon" data-color="#f59e0b"><i class="icon-copy bi bi-archive"></i></div></div></div></div></div></div>
+				<div class="row px-3 pb-10">
+					<div class="col-md-6 mb-20"><div class="card-box height-100-p pd-20"><div class="h6">Backend</div><div id="sys-backend" class="font-14 text-muted">Loading…</div></div></div>
+					<div class="col-md-6 mb-20"><div class="card-box height-100-p pd-20"><div class="h6">Database</div><div id="sys-mongo" class="font-14 text-muted">Loading…</div></div></div>
 				</div>
-				<div class="card-box pb-10 mb-20">
-					<div class="h5 pd-20 mb-0">Environment Checks</div>
-					<table class="data-table table nowrap" id="env-table"><thead><tr><th>Variable</th><th>Status</th><th>Critical</th></tr></thead><tbody id="env-body"><tr><td colspan="3" class="text-center text-muted">Loading…</td></tr></tbody></table>
+				<div class="row px-3 pb-10">
+					<div class="col-md-6 mb-20"><div class="card-box pb-10"><div class="h6 pd-20 mb-0">Environment Checks</div><table class="data-table table nowrap" id="env-table"><thead><tr><th>Variable</th><th>Status</th><th>Critical</th></tr></thead><tbody id="env-body"><tr><td colspan="3" class="text-center text-muted">Loading…</td></tr></tbody></table></div></div>
+					<div class="col-md-6 mb-20"><div class="card-box pb-10"><div class="h6 pd-20 mb-0">Database Collections</div><table class="data-table table nowrap" id="coll-table"><thead><tr><th>Collection</th><th>Documents</th></tr></thead><tbody id="coll-body"><tr><td colspan="2" class="text-center text-muted">Loading…</td></tr></tbody></table></div></div>
 				</div>
-				<div class="card-box pb-10">
-					<div class="h5 pd-20 mb-0">Database Collections</div>
-					<table class="data-table table nowrap" id="coll-table"><thead><tr><th>Collection</th><th>Documents</th></tr></thead><tbody id="coll-body"><tr><td colspan="2" class="text-center text-muted">Loading…</td></tr></tbody></table>
-				</div></div></div>
+				<div class="row px-3 pb-10">
+					<div class="col-12"><div class="card-box pb-10"><div class="h6 pd-20 mb-0">Services</div><div id="sys-services" class="pd-20 pt-0 text-muted">Loading…</div></div></div>
+				</div>
+			</div>
+
+			<!-- ============ PLATFORM HEALTH ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Platform Health</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadPlatformHealth()">Refresh</button></div>
+				<div class="pd-20 pt-0"><div id="platform-overall" class="font-24 weight-700 mb-10">—</div><div id="platform-services" class="text-muted">Loading…</div></div>
+			</div>
+
+			<!-- ============ CONNECTION DOCTOR ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="h5 pd-20 mb-0">Connection Doctor</div>
+				<form class="pd-20 pt-0" onsubmit="return runConnection(event)">
+					<div class="form-row">
+						<div class="col-md-5 mb-2"><input class="form-control" id="conn-ig" placeholder="Instagram user ID (igUserId)" /></div>
+						<div class="col-md-5 mb-2"><input class="form-control" id="conn-user" placeholder="or username (without @)" /></div>
+						<div class="col-md-2 mb-2"><button class="btn btn-primary btn-block" type="submit">Diagnose</button></div>
+					</div>
+				</form>
+				<div class="pd-20 pt-0"><div id="conn-result" class="text-muted">Enter an account to run the Meta connection check.</div></div>
+			</div>
+
+			<!-- ============ ACCOUNT SEARCH ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="h5 pd-20 mb-0">Account Search</div>
+				<form class="pd-20 pt-0" onsubmit="return runAccountSearch(event)">
+					<div class="form-row">
+						<div class="col-md-10 mb-2"><input class="form-control" id="acc-search" placeholder="Search by creator name, email, @username, igUserId or webhookUserId (min 2 chars)" /></div>
+						<div class="col-md-2 mb-2"><button class="btn btn-primary btn-block" type="submit">Search</button></div>
+					</div>
+				</form>
+				<div class="pd-20 pt-0"><div id="acc-result" class="text-muted">Search to list Instagram accounts.</div></div>
+			</div>
+
+			<!-- ============ ERRORS ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Error Log</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadErrors()">Refresh</button></div>
+				<div class="row px-3 pb-10">
+					<div class="col-md-3 mb-2"><select class="form-control" id="err-sev" onchange="loadErrors()"><option value="all">All severities</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
+					<div class="col-md-3 mb-2"><select class="form-control" id="err-status" onchange="loadErrors()"><option value="all">All statuses</option><option value="open">Open</option><option value="investigating">Investigating</option><option value="mitigated">Mitigated</option><option value="resolved">Resolved</option></select></div>
+					<div class="col-md-6 mb-2"><input class="form-control" id="err-search" placeholder="Filter message / type / module" onkeyup="loadErrors()" /></div>
+				</div>
+				<div class="pd-20 pt-0"><div id="err-summary" class="mb-10 text-muted"></div><table class="data-table table nowrap" id="err-table"><thead><tr><th>Severity</th><th>Module</th><th>Type</th><th>Message</th><th>Occ.</th><th>Users</th><th>Status</th><th>Last seen</th><th>Action</th></tr></thead><tbody id="err-body"><tr><td colspan="9" class="text-center text-muted">Loading…</td></tr></tbody></table></div>
+			</div>
+
+			<!-- ============ INCIDENTS ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Incidents</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadIncidents()">Refresh</button></div>
+				<div class="pd-20 pt-0"><div id="inc-result" class="text-muted">Loading…</div></div>
+			</div>
+
+			<!-- ============ INTEGRATIONS HEALTH ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Instagram Token Health</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadIntegrations()">Refresh</button></div>
+				<div class="pd-20 pt-0"><div id="int-result" class="text-muted">Loading…</div></div>
+			</div>
+
+			<!-- ============ LIVE LOGS ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Live Logs</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadLogs()">Refresh</button></div>
+				<div class="row px-3 pb-10">
+					<div class="col-md-3 mb-2"><select class="form-control" id="log-level" onchange="loadLogs()"><option value="">Any level</option><option value="error">Error</option><option value="warn">Warn</option><option value="info">Info</option><option value="debug">Debug</option></select></div>
+					<div class="col-md-4 mb-2"><input class="form-control" id="log-module" placeholder="module (optional)" onkeyup="loadLogs()" /></div>
+					<div class="col-md-5 mb-2"><input class="form-control" id="log-search" placeholder="search (optional)" onkeyup="loadLogs()" /></div>
+				</div>
+				<div class="pd-20 pt-0"><div id="log-result" class="text-muted">Loading…</div></div>
+			</div>
+
+			<!-- ============ ALERTS ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="d-flex justify-content-between align-items-center"><div class="h5 pd-20 mb-0">Alerts</div><button class="btn btn-sm btn-outline-primary mr-20" onclick="loadAlerts()">Refresh</button></div>
+				<div class="pd-20 pt-0"><div id="alert-result" class="text-muted">Loading…</div></div>
+			</div>
+
+			<!-- ============ LIVE ACTION TOOLS ============ -->
+			<div class="card-box pb-10 mb-20">
+				<div class="h5 pd-20 mb-0">Live Diagnostic Action Tools</div>
+				<div id="tools-gate" class="pd-20 pt-0 text-muted">Checking your permissions…</div>
+				<div id="tools-wrap" class="pd-20 pt-0"></div>
+			</div>
+
+			<div class="footer-wrap pd-20 mb-20 card-box">DMGO Console — Troubleshooting Hub. All data is read live from the production backend.</div>
+		</div>
+
 		<script src="vendors/scripts/core.js"></script>
 		<script src="vendors/scripts/script.min.js"></script>
 		<script src="vendors/scripts/process.js"></script>
@@ -69,25 +163,320 @@
 		<script src="assets/js/api.js"></script>
 		<script src="assets/js/auth.js"></script>
 		<script>
-			function listOf(res){ if(Array.isArray(res))return res; if(res&&typeof res==='object'){var k=['users','records','plans','tickets','accounts','automations','rows','nodes','data'];for(var i=0;i<k.length;i++)if(Array.isArray(res[k[i]]))return res[k[i]];} return []; }
-			function inr(n){return '₹'+Number(n||0).toLocaleString('en-IN');}
-			function ini(name){var p=String(name||'?').trim().split(/\s+/);return ((p[0]||'?')[0]||'?').toUpperCase()+((p[1]||'')[0]||'').toUpperCase();}
-			function fmtDate(iso){if(!iso)return '—';return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
-			function bad(s,c){c=c||['#eef0f4','#6b7280'];return '<span class="badge badge-pill" style="background-color:'+c[0]+';color:'+c[1]+';">'+s+'</span>';}
-			function th(c){return c?'#09cc06':'#e95959';}
-		
-			window.__pageInit=function(){
-				return window.DMGO_API.get('/admin/diagnostics/system').then(function(res){
-					var env=(res&&res.envChecks)||[]; var coll=(res&&res.collectionCounts)||[];
-					document.getElementById('d-env').textContent=env.filter(function(e){return e.critical && e.present;}).length;
-					document.getElementById('d-missing').textContent=env.filter(function(e){return e.critical && !e.present;}).length;
-					document.getElementById('d-coll').textContent=coll.length;
-					document.getElementById('d-docs').textContent=coll.reduce(function(s,c){return s+(Number(c.count)||0);},0).toLocaleString('en-IN');
-					document.getElementById('env-body').innerHTML=env.map(function(e){return '<tr><td><b>'+(e.name||'—')+'</b></td><td>'+bad(e.status,e.status==='set'?['#e7ebf5','#09cc06']:['#fdeaea','#e95959'])+'</td><td>'+(e.critical?'yes':'no')+'</td></tr>';}).join('');
-					document.getElementById('coll-body').innerHTML=coll.map(function(c){return '<tr><td>'+(c.name||'—')+'</td><td>'+(Number(c.count)||0).toLocaleString('en-IN')+'</td></tr>';}).join('');
-					if(window.jQuery&&jQuery.fn.DataTable){jQuery('#env-table').DataTable({responsive:true,paging:false,searching:true,info:false});jQuery('#coll-table').DataTable({responsive:true,paging:false,searching:true,info:false,order:[[1,'desc']]});}
-				}).catch(function(){document.getElementById('env-body').innerHTML='<tr><td colspan="3" class="text-center text-danger">Failed to load (needs reliability.read).</td></tr>';});
-			};</script>
+			// ---------- shared helpers ----------
+			function el(id){ return document.getElementById(id); }
+			function caps(){ return window.__caps || []; }
+			function hasCap(c){ return caps().indexOf(c) >= 0; }
+			function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+			function pp(obj){ try { return JSON.stringify(obj, null, 2); } catch(e){ return String(obj); } }
+			function statusColor(s){ s=String(s||'').toLowerCase(); if(['pass','healthy','open','resolved','green','active'].indexOf(s)>=0) return '#09cc06'; if(['warn','warning','degraded','investigating','mitigated','yellow','trialing'].indexOf(s)>=0) return '#f59e0b'; if(['fail','down','error','critical','expired','canceled','red'].indexOf(s)>=0) return '#e95959'; return '#6b7280'; }
+			function badge(text, color){ color=color||statusColor(text); return '<span class="badge badge-pill" style="background-color:'+color+'22;color:'+color+';">' + esc(text) + '</span>'; }
+			function fmtDate(iso){ if(!iso) return '—'; try { return new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e){ return esc(iso); } }
+			function dt(tableId){ if(window.jQuery && jQuery.fn.DataTable && jQuery(tableId).length){ try { var t=jQuery(tableId).DataTable(); if(t) t.destroy(); } catch(e){} } }
+			function renderTable(tableId, bodyId, rows, cols){ dt(tableId); var tb=el(bodyId); if(!rows || !rows.length){ tb.innerHTML='<tr><td colspan="'+cols.length+'" class="text-center text-muted">No records.</td></tr>'; return; } tb.innerHTML=rows.map(function(r){ return '<tr>'+cols.map(function(c){ return '<td>'+ (c.html? c.html(r) : esc(r[c.k])) +'</td>'; }).join('')+'</tr>'; }).join(''); if(window.jQuery && jQuery.fn.DataTable){ jQuery(tableId).DataTable({responsive:true,paging:true,searching:true,info:false,pageLength:25}); } }
+
+			// ---------- SYSTEM HEALTH (fixed mapping) ----------
+			function loadSystem(){
+				window.DMGO_API.get('/admin/diagnostics/system').then(function(res){
+					var env = (res && res.env && res.env.checks) || [];
+					var coll = (res && res.mongo && res.mongo.collections) || [];
+					el('d-env').textContent = (res && res.rawRead === false) ? '—' : env.filter(function(e){ return e.critical && e.present; }).length;
+					el('d-missing').textContent = (res && res.rawRead === false) ? '—' : env.filter(function(e){ return e.critical && !e.present; }).length;
+					el('d-coll').textContent = (res && res.rawRead === false) ? '—' : coll.length;
+					el('d-docs').textContent = (res && res.rawRead === false) ? '—' : ((res && res.mongo && res.mongo.totalDocs!=null) ? Number(res.mongo.totalDocs).toLocaleString('en-IN') : coll.reduce(function(s,c){ return s+(Number(c.count)||0); },0).toLocaleString('en-IN'));
+					var b = res && res.backend;
+					el('sys-backend').innerHTML = b ? [
+						'Uptime: <b>'+esc(b.uptimeHuman||b.uptimeSeconds+'s')+'</b>',
+						'Node: '+esc(b.nodeVersion), 'Platform: '+esc(b.platform),
+						'Memory: '+(b.memory?esc(b.memory.heapUsedMb)+'/'+esc(b.memory.rssMb)+' MB':'—'),
+						'Commit: '+esc((b.commit||'—')), 'Deployed: '+esc(b.deployedAt||'—')
+					].join('<br>') : '—';
+					el('sys-mongo').innerHTML = (res && res.mongo) ? ('Connected: <b>'+ (res.mongo.connected? 'yes':'no') +'</b><br>DB: '+esc(res.mongo.dbName||'—')) : '—';
+					if(res && res.rawRead === false){ el('env-body').innerHTML='<tr><td colspan="3" class="text-center text-warning">Detailed env/collection data hidden — needs raw-read permission.</td></tr>'; }
+					else { renderTable('#env-table','env-body', env, [
+						{k:'name', html:function(r){return '<b>'+esc(r.name)+'</b>';}},
+						{k:'status', html:function(r){return badge(r.status);}},
+						{k:'critical', html:function(r){return r.critical?'yes':'no';}}
+					]); }
+					if(res && res.rawRead === false){ el('coll-body').innerHTML='<tr><td colspan="2" class="text-center text-warning">Hidden — needs raw-read permission.</td></tr>'; } else renderTable('#coll-table','coll-body', coll, [
+						{k:'name', html:function(r){return '<b>'+esc(r.name)+'</b>';}},
+						{k:'count', html:function(r){return Number(r.count||0).toLocaleString('en-IN') + (r.error?' <span class="text-danger" title="'+esc(r.error)+'">⚠</span>':'');}}
+					]);
+					var svcs = (res && res.services) || [];
+					el('sys-services').innerHTML = svcs.length ? svcs.map(function(s){ return badge(s.status) + ' ' + esc(s.name) + (s.detail? ' <span class="text-muted">— '+esc(s.detail)+'</span>':'') + '<br>'; }).join('') : '—';
+				}).catch(function(e){ el('env-body').innerHTML='<tr><td colspan="3" class="text-center text-danger">Failed to load (needs reliability.read).</td></tr>'; el('sys-backend').textContent='Failed.'; });
+			}
+
+			// ---------- PLATFORM HEALTH ----------
+			function loadPlatformHealth(){
+				window.DMGO_API.get('/admin/health').then(function(res){
+					var ov = res && res.overallStatus;
+					el('platform-overall').innerHTML = badge(ov);
+					var svcs = (res && res.services) || [];
+					el('platform-services').innerHTML = svcs.length ? svcs.map(function(s){ return badge(s.status) + ' ' + esc(s.name) + (s.detail? ' <span class="text-muted">— '+esc(s.detail)+'</span>':'') + '<br>'; }).join('') : '—';
+				}).catch(function(){ el('platform-services').textContent='Failed to load.'; });
+			}
+
+			// ---------- CONNECTION DOCTOR ----------
+			function runConnection(ev){
+				ev.preventDefault();
+				var ig = el('conn-ig').value.trim(), user = el('conn-user').value.trim().replace(/^@/,'');
+				if(!ig && !user){ el('conn-result').innerHTML='<span class="text-danger">Provide an igUserId or username.</span>'; return; }
+				var q = '?' + (ig? 'igUserId='+encodeURIComponent(ig) : 'username='+encodeURIComponent(user));
+				el('conn-result').innerHTML='<span class="text-muted">Running…</span>';
+				window.DMGO_API.get('/admin/diagnostics/connection'+q).then(function(res){
+					if(res && res.error){ el('conn-result').innerHTML='<span class="text-danger">'+esc(res.error)+'</span>'; return; }
+					var steps = res.steps || [];
+					var html = '<div class="mb-10">Overall: '+ (res.overall? badge(res.overall):'—') +' &nbsp; <b>@'+esc(res.username||'')+'</b></div>';
+					html += '<ul class="list-group">';
+					steps.forEach(function(s){ html += '<li class="list-group-item"><span class="step-'+esc(s.status)+'">●</span> <b>'+esc(s.label||s.name||'')+'</b>: '+esc(s.detail||'')+(s.hint? ' <span class="text-warning">('+esc(s.hint)+')</span>':'')+'</li>'; });
+					html += '</ul>';
+					el('conn-result').innerHTML = html;
+				}).catch(function(e){ el('conn-result').innerHTML='<span class="text-danger">Failed: '+(e&&e.message||'error')+'</span>'; });
+				return false;
+			}
+
+			// ---------- ACCOUNT SEARCH ----------
+			function runAccountSearch(ev){
+				ev.preventDefault();
+				var q = el('acc-search').value.trim();
+				if(q.length < 2){ el('acc-result').innerHTML='<span class="text-danger">Enter at least 2 characters.</span>'; return; }
+				el('acc-result').innerHTML='<span class="text-muted">Searching…</span>';
+				window.DMGO_API.get('/admin/diagnostics/accounts?search='+encodeURIComponent(q)).then(function(res){
+					var rows = (res && res.rows) || [];
+					if(!rows.length){ el('acc-result').innerHTML='<span class="text-muted">No accounts found.</span>'; return; }
+					var html = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Username</th><th>igUserId</th><th>Owner</th><th>Connection</th><th>Token</th><th>Webhook</th></tr></thead><tbody>';
+					rows.forEach(function(r){ html += '<tr><td><b>'+esc(r.username||'—')+'</b></td><td>'+esc(r.igUserId||'—')+'</td><td>'+esc((r.owner&&r.owner.name)||r.userId||'—')+'</td><td>'+badge(r.connectionStatus)+'</td><td>'+badge(r.tokenHealthStatus)+'</td><td>'+badge(r.webhookSubscriptionStatus)+'</td></tr>'; });
+					html += '</tbody></table></div>';
+					el('acc-result').innerHTML = html;
+				}).catch(function(e){ el('acc-result').innerHTML='<span class="text-danger">Failed: '+(e&&e.message||'error')+'</span>'; });
+				return false;
+			}
+
+			// ---------- ERRORS ----------
+			function loadErrors(){
+				var sev = el('err-sev').value, st = el('err-status').value, search = el('err-search').value.trim();
+				var q = '?pageSize=50' + (sev&&sev!=='all'?'&severity='+encodeURIComponent(sev):'') + (st&&st!=='all'?'&status='+encodeURIComponent(st):'') + (search?'&search='+encodeURIComponent(search):'');
+				window.DMGO_API.get('/admin/errors'+q).then(function(res){
+					var sum = res.summary || {};
+					el('err-summary').innerHTML = 'Open: <b>'+ (sum.open||0) +'</b> · Investigating: '+ (sum.investigating||0) +' · Mitigated: '+ (sum.mitigated||0) +' · Resolved: '+ (sum.resolved||0) +' · Critical: '+ (sum.critical||0) +' · Total: '+ (res.total||0);
+					renderTable('#err-table','err-body', res.rows||[], [
+						{k:'severity', html:function(r){return badge(r.severity);}},
+						{k:'module'},
+						{k:'errorType'},
+						{k:'errorMessage', html:function(r){return esc((r.errorMessage||'').slice(0,160));}},
+						{k:'occurrences'},
+						{k:'affectedUsersCount'},
+						{k:'status', html:function(r){return badge(r.status);}},
+						{k:'lastSeenAt', html:function(r){return fmtDate(r.lastSeenAt);}},
+						{k:'id', html:function(r){ return '<button class="btn btn-sm btn-outline-secondary" onclick="setErr(\''+esc(r.id)+'\',\'resolve\')">Resolve</button> <button class="btn btn-sm btn-outline-secondary" onclick="setErr(\''+esc(r.id)+'\',\'investigate\')">Investigate</button>'; }}
+					]);
+				}).catch(function(){ el('err-body').innerHTML='<tr><td colspan="9" class="text-center text-danger">Failed to load.</td></tr>'; });
+			}
+			function setErr(id, action){
+				window.DMGO_API.post('/admin/errors', { id:id, action:action }).then(function(){ loadErrors(); }).catch(function(e){ alert('Failed: '+(e&&e.message||'error')); });
+			}
+
+			// ---------- INCIDENTS ----------
+			function loadIncidents(){
+				window.DMGO_API.get('/admin/incidents').then(function(res){
+					var rows = (res && res.incidents) || [];
+					if(!rows.length){ el('inc-result').innerHTML='<span class="text-muted">No open incidents.</span>'; return; }
+					var html = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>ID</th><th>Source</th><th>Title</th><th>Severity</th><th>State</th><th>Created</th></tr></thead><tbody>';
+					rows.forEach(function(r){ html += '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.source)+'</td><td>'+esc(r.title)+'</td><td>'+badge(r.severity)+'</td><td>'+badge(r.state)+'</td><td>'+fmtDate(r.createdAt)+'</td></tr>'; });
+					html += '</tbody></table></div>';
+					el('inc-result').innerHTML = html;
+				}).catch(function(){ el('inc-result').innerHTML='<span class="text-danger">Failed to load.</span>'; });
+			}
+
+			// ---------- INTEGRATIONS / TOKEN HEALTH ----------
+			function loadIntegrations(){
+				window.DMGO_API.get('/admin/integrations-health').then(function(res){
+					if(!res){ el('int-result').innerHTML='—'; return; }
+					var t = res.instagramTokenHealth || {};
+					var html = 'Total accounts: <b>'+esc(res.totalAccounts)+'</b> · Expiring soon: '+badge(res.expiringSoon)+' · Expired: '+badge(res.expired)+'<br>';
+					html += 'Token health — active: '+esc(t.totalActive)+', healthy: '+esc(t.healthy)+', invalid: '+badge(t.invalid)+', transient: '+esc(t.transientError)+', stale/unchecked: '+esc(t.uncheckedOrStale)+'<br>';
+					html += 'API status: '+badge(res.apiStatus)+' · Encryption: '+esc(res.encryptionStatus)+' · Refresh: '+badge(res.refreshStatus);
+					el('int-result').innerHTML = html;
+				}).catch(function(){ el('int-result').innerHTML='<span class="text-danger">Failed to load.</span>'; });
+			}
+
+			// ---------- LIVE LOGS ----------
+			function loadLogs(){
+				var lvl = el('log-level').value, mod = el('log-module').value.trim(), search = el('log-search').value.trim();
+				var q = '?limit=100' + (lvl?'&level='+encodeURIComponent(lvl):'') + (mod?'&module='+encodeURIComponent(mod):'') + (search?'&search='+encodeURIComponent(search):'');
+				window.DMGO_API.get('/admin/live-logs'+q).then(function(res){
+					var rows = (res && res.rows) || [];
+					if(!rows.length){ el('log-result').innerHTML='<span class="text-muted">No logs.</span>'; return; }
+					var html = '<div class="json-out">';
+					rows.slice(0,60).forEach(function(r){ html += esc(pp(r)) + '\n\n'; });
+					html += '</div>';
+					el('log-result').innerHTML = html;
+				}).catch(function(){ el('log-result').innerHTML='<span class="text-danger">Failed to load.</span>'; });
+			}
+
+			// ---------- ALERTS ----------
+			function loadAlerts(){
+				window.DMGO_API.get('/admin/alerts?pageSize=50').then(function(res){
+					var rows = (res && res.alerts) || [];
+					if(!rows.length){ el('alert-result').innerHTML='<span class="text-muted">No alerts.</span>'; return; }
+					var html = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Type</th><th>Severity</th><th>Title</th><th>Status</th><th>Created</th></tr></thead><tbody>';
+					rows.forEach(function(r){ html += '<tr><td>'+esc(r.type||r.kind||'—')+'</td><td>'+badge(r.severity)+'</td><td>'+esc(r.title||r.message||'')+'</td><td>'+badge(r.status)+'</td><td>'+fmtDate(r.createdAt)+'</td></tr>'; });
+					html += '</tbody></table></div>';
+					el('alert-result').innerHTML = html;
+				}).catch(function(){ el('alert-result').innerHTML='<span class="text-danger">Failed to load (needs reliability.read).</span>'; });
+			}
+
+			// ---------- LIVE ACTION TOOLS ----------
+			var TOOLS = [
+				{ id:'graph-call', title:'Graph API Call', path:'/admin/diagnostics/graph-call',
+					desc:'Raw Meta Graph API call using the account token. GET is read-only; POST/DELETE change state on Meta and require a reason + confirmation.',
+					stateChanging:function(v){ return v.method && v.method !== 'GET'; },
+					fields:[
+						{name:'instagramAccountId', label:'Instagram Account ID', required:true},
+						{name:'path', label:'Graph path (e.g. me or {igUserId}/media)', required:true},
+						{name:'method', label:'HTTP method', type:'select', options:['GET','POST','DELETE'], required:true},
+						{name:'params', label:'Query params (JSON)', type:'textarea'},
+						{name:'body', label:'Request body (JSON)', type:'textarea'}
+					] },
+				{ id:'send-dm', title:'Send Test DM', path:'/admin/diagnostics/send-dm',
+					desc:'Actually sends a real Instagram DM from the account. Requires reason + confirmation. Provide recipientId OR commentId.',
+					stateChanging:function(){ return true; },
+					fields:[
+						{name:'instagramAccountId', label:'Instagram Account ID', required:true},
+						{name:'recipientId', label:'Recipient ID (IG-scoped user id)'},
+						{name:'commentId', label:'or Comment ID (private reply)'},
+						{name:'message', label:'Message text', type:'textarea', required:true}
+					] },
+				{ id:'simulate-webhook', title:'Simulate Webhook', path:'/admin/diagnostics/simulate-webhook',
+					desc:'Injects a fake Meta webhook event into the pipeline to test automation flow. Requires reason + confirmation.',
+					stateChanging:function(){ return true; },
+					fields:[
+						{name:'instagramAccountId', label:'Instagram Account ID', required:true},
+						{name:'template', label:'Template', type:'select', options:['comment','message','mention','custom'], required:true},
+						{name:'text', label:'Event text'},
+						{name:'senderId', label:'Sender ID'},
+						{name:'senderUsername', label:'Sender username'},
+						{name:'mediaId', label:'Media ID'},
+						{name:'commentId', label:'Comment ID'}
+					] },
+				{ id:'follow-check', title:'Follow Check', path:'/admin/diagnostics/follow-check',
+					desc:'Read-only: resolves the follow-status of a messaging user via the Meta User Profile API.',
+					stateChanging:function(){ return false; },
+					fields:[
+						{name:'instagramAccountId', label:'Instagram Account ID', required:true},
+						{name:'igsid', label:'IGSID (optional — auto-picks latest DM sender)'}
+					] },
+				{ id:'backfill-comments', title:'Backfill Comments', path:'/admin/diagnostics/backfill-comments',
+					desc:'Replays missed comments for an automation or account. Defaults to a DRY RUN (no writes) — uncheck to actually write.',
+					stateChanging:function(){ return false; },
+					fields:[
+						{name:'automationId', label:'Automation ID (one automation)'},
+						{name:'igUserId', label:'or igUserId (all active automations)'},
+						{name:'accountId', label:'or account ID'},
+						{name:'dryRun', label:'Dry run (no writes)', type:'checkbox', checked:true},
+						{name:'sinceMode', label:'Since mode', type:'select', options:['hours','cursor','connect']},
+						{name:'sinceHours', label:'Since hours (number)'},
+						{name:'limit', label:'Limit (number)'}
+					] },
+				{ id:'reconcile-queued', title:'Reconcile Queued', path:'/admin/diagnostics/reconcile-queued',
+					desc:'Clears stuck "Queued" activities immediately without waiting for the worker sweep.',
+					stateChanging:function(){ return false; },
+					fields:[
+						{name:'staleMs', label:'Stale age ms (0 = any age)', type:'number'},
+						{name:'userId', label:'User ID (optional, blank = all)'}
+					] }
+			];
+
+			function renderTools(){
+				if(!hasCap('diagnostics.execute')){
+					el('tools-gate').innerHTML = '<span class="text-warning">Your admin account does not have the <b>diagnostics.execute</b> permission, so the live action tools are hidden. These tools perform real actions on Meta (send DMs, call the Graph API, inject webhooks) and are restricted.</span>';
+					return;
+				}
+				el('tools-gate').innerHTML = '<span class="text-muted">These tools perform real actions. State-changing tools require a <b>reason</b> and an explicit <b>confirmation</b>. Every call is audit-logged.</span>';
+				var wrap = el('tools-wrap'); wrap.innerHTML='';
+				TOOLS.forEach(function(t){
+					var card = document.createElement('div'); card.className='card-box tool-card mb-10';
+					var fieldsHtml = t.fields.map(function(f){
+						var id = t.id+'-'+f.name;
+						if(f.type==='textarea') return '<div class="form-group mb-2"><label>'+esc(f.label)+(f.required?' *':'')+'</label><textarea class="form-control" id="'+id+'" rows="3"></textarea></div>';
+						if(f.type==='select') return '<div class="form-group mb-2"><label>'+esc(f.label)+(f.required?' *':'')+'</label><select class="form-control" id="'+id+'">'+f.options.map(function(o){return '<option>'+esc(o)+'</option>';}).join('')+'</select></div>';
+						if(f.type==='checkbox') return '<div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="'+id+'" '+(f.checked?'checked':'')+'><label class="form-check-label">'+esc(f.label)+'</label></div>';
+						return '<div class="form-group mb-2"><label>'+esc(f.label)+(f.required?' *':'')+'</label><input class="form-control" id="'+id+'" type="'+(f.type==='number'?'number':'text')+'"></div>';
+					}).join('');
+					card.innerHTML =
+						'<div class="tool-head d-flex justify-content-between align-items-center pd-20" onclick="this.parentNode.classList.toggle(\'open\')"><div><b>'+esc(t.title)+'</b> <span class="text-muted">— '+esc(t.desc)+'</span></div><i class="bi bi-chevron-down"></i></div>'+
+						'<div class="tool-body pd-20 pt-0"><form onsubmit="return runTool(event,\''+t.id+'\')">'+fieldsHtml+
+						'<div class="tool-guard"></div>'+
+						'<button class="btn btn-primary" type="submit">Run</button> <span class="tool-status text-muted ml-2"></span>'+
+						'</form><div class="tool-out json-out mt-2" style="display:none;"></div></div>';
+					wrap.appendChild(card);
+				});
+			}
+
+			function runTool(ev, id){
+				ev.preventDefault();
+				var t = TOOLS.filter(function(x){ return x.id===id; })[0];
+				var vals = {}; var missing = [];
+				t.fields.forEach(function(f){
+					var node = el(id+'-'+f.name);
+					var v = node.type==='checkbox' ? node.checked : node.value.trim();
+					if(f.type==='number' && v!=='') v = Number(v);
+					if(f.type==='checkbox'){ vals[f.name]=v; return; }
+					if(v===''){ if(f.required) missing.push(f.label); return; }
+					if((f.name==='params'||f.name==='body') && v){ try { vals[f.name]=JSON.parse(v); } catch(e){ alert(f.label+' must be valid JSON'); throw e; } }
+					else vals[f.name]=v;
+				});
+				if(missing.length){ alert('Required: '+missing.join(', ')); return; }
+
+				var changing = t.stateChanging(vals);
+				if(changing){
+					var reason = (el(id+'-__reason') && el(id+'-__reason').value.trim()) || '';
+					var confirmed = el(id+'-__confirm') && el(id+'-__confirm').checked;
+					if(!reason){ alert('A reason is required for this state-changing action.'); return; }
+					if(!confirmed){ alert('Please tick the confirmation box.'); return; }
+					vals.reason = reason;
+					vals.confirmationAccountId = vals.instagramAccountId;
+				}
+				if(id==='backfill-comments' && vals.dryRun!==false) vals.dryRun = true;
+
+				var card = ev.target.closest('.tool-card');
+				var status = card.querySelector('.tool-status'); var out = card.querySelector('.tool-out');
+				status.textContent='Running…'; out.style.display='none';
+				window.DMGO_API.post(t.path, vals).then(function(r){
+					status.textContent='Done.'; out.style.display='block';
+					out.textContent = pp(r);
+				}).catch(function(e){ status.textContent='Failed.'; out.style.display='block'; out.textContent = pp({ error: (e&&e.message)||'request failed', code: e&&e.code }); });
+				return false;
+			}
+
+			function injectGuards(){
+				TOOLS.forEach(function(t){
+					if(!t.stateChanging({})) return;
+					var card = null; var all = document.querySelectorAll('.tool-card');
+					all.forEach(function(c){ if(c.querySelector('[id^="'+t.id+'-"]')) card=c; });
+					if(!card) return;
+					var guard = card.querySelector('.tool-guard');
+					if(guard && !guard.innerHTML){
+						guard.innerHTML = '<div class="form-group mb-2"><label>Reason * (required for state-changing action)</label><input class="form-control" id="'+t.id+'-__reason" type="text"></div>'+
+							'<div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="'+t.id+'-__confirm"><label class="form-check-label">I confirm I want to perform this real action on Meta</label></div>';
+					}
+				});
+			}
+
+			// ---------- page bootstrap ----------
+			window.__pageInit = function(s){
+				window.__caps = (s && s.capabilities) || [];
+				var banner = el('cap-banner');
+				if(window.__caps.length){
+					banner.style.display='block';
+					banner.innerHTML = '<div class="pd-20"><b>Your permissions:</b> ' + window.__caps.map(function(c){ return '<span class="cap-pill">'+esc(c)+'</span>'; }).join('') + (hasCap('raw_payloads.read')?'':'<div class="mt-2 text-muted">Note: raw API payloads are hidden because your account lacks <b>raw_payloads.read</b>.</div>') + '</div>';
+				}
+				loadSystem(); loadPlatformHealth(); loadErrors(); loadIncidents(); loadIntegrations(); loadLogs(); loadAlerts();
+				renderTools(); injectGuards();
+				return true;
+			};
+		</script>
 		<script src="assets/js/shell.js"></script>
 	</body>
 </html>
